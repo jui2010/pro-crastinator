@@ -1,4 +1,4 @@
-import {SET_TODOS, LOADING_DATA, SET_TOGGLE_STATUS} from '../types'
+import {SET_TODOS, LOADING_DATA, SET_TOGGLE_STATUS, POST_TODO} from '../types'
 
 const initialState = {
     todos : [],
@@ -29,6 +29,15 @@ export default function (state = initialState, action){
             }
             return {
                 ...state,
+            }
+        case POST_TODO :
+            return {
+                ...state,
+                todos : [
+                    action.payload,
+                    ...state.todos
+                ]
+                
             }
         default : 
             return {

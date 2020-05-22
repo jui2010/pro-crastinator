@@ -12,7 +12,7 @@ import startOfWeek from 'date-fns/startOfWeek'
 import endOfWeek from 'date-fns/endOfWeek'
 //import differenceInCalendarDays from 'date-fns/differenceInCalendarDays'
 import parseISO from 'date-fns/parseISO'
-import formatISO from 'date-fns/formatISO'
+//import formatISO from 'date-fns/formatISO'
 
 import getDate from 'date-fns/getDate'
 import getMonth from 'date-fns/getMonth'
@@ -103,6 +103,7 @@ export class CalendarCells extends Component {
                                     if(d === createdAtd & m === createdAtm & y === createdAty & label === "personal"){
                                         personalCount = personalCount +1
                                     }
+                                    return <div></div>
                                 }) 
                                 }
                                 {generalCount === 0 ? <div></div> : <div>general : {generalCount} </div>}

@@ -2,6 +2,7 @@ import React, { Component ,Fragment} from 'react'
 import withStyles from '@material-ui/core/styles/withStyles'
 //import axios from 'axios'
 
+
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Grid from '@material-ui/core/Grid'
 import TodoItem from '../components/TodoItem'
@@ -16,7 +17,9 @@ const styles = (theme) => ({
 class home extends Component {
 
     componentDidMount(){
+        const {todos} = this.props.data
         //get the todo items
+        if(todos)
         this.props.getTodos()
     }
     
@@ -32,10 +35,11 @@ class home extends Component {
         return (
             <Fragment>
                 <Grid container spacing={5}>
-                    <Grid sm>
+                    <Grid item xs={6}>
                         {todoMarkup}
                     </Grid>
-                    <Grid sm>
+                    <Grid item xs={2} />
+                    <Grid item xs={4}>
                         side bar
                     </Grid>
                 </Grid>

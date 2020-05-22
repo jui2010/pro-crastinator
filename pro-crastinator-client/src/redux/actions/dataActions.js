@@ -1,4 +1,4 @@
-import {SET_TODOS, LOADING_DATA, SET_TOGGLE_STATUS} from '../types'
+import {SET_TODOS, LOADING_DATA, SET_TOGGLE_STATUS, POST_TODO} from '../types'
 import axios from 'axios'
 
 //get the todo items
@@ -16,7 +16,17 @@ export const getTodos = () => (dispatch) => {
     .catch(err => console.log(err) )
 }
 
-
+//post a todo
+export const postTodo = (newTodo) => (dispatch) => {
+    axios.post('/postTodo' , newTodo)
+        .then(res => {
+            dispatch({
+                type : POST_TODO,
+                payload : res.data
+            })
+        })
+        .catch(err => console.log(err))
+}
 //toggle the todo done field
 export const toggleStatus = (todoId) => (dispatch) => {
     axios.get(`/toggleStatus/${todoId}`)

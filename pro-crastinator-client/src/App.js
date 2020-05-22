@@ -18,6 +18,7 @@ import store from './redux/store'
 import signup from './pages/signup'
 import login from './pages/login'
 import home from './pages/home'
+import welcome from './pages/welcome'
 import monthView from './pages/monthView'
 
 //component
@@ -34,7 +35,8 @@ class App extends Component {
             <NavBar />
             <div className="container">
               <Switch>
-                <Route exact path="/" component={home} />
+                <Route exact path="/" component={welcome} />
+                <Route exact path="/home" component={home} />
                 <Route exact path="/login" component={login} />
                 <Route exact path="/signup" component={signup} />
                 <Route exact path="/month-view" component={monthView} />

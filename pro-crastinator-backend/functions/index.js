@@ -97,7 +97,9 @@ app.post('/postTodo', (req, res) => {
     db.collection('todos')
         .add(newTodo)
         .then(doc => {
-            return res.json({message : `${doc.id} todo is created`})
+            const resTodo = newTodo
+            resTodo.todoId = doc.id
+            return res.json(resTodo)
         })
         .catch((err) => {
             res.status(500).json({error : 'something went wrong'})
