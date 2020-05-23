@@ -6,10 +6,13 @@ import withStyles from '@material-ui/core/styles/withStyles'
 import Typography from '@material-ui/core/Typography'
 import Tooltip from '@material-ui/core/Tooltip'
 
+
+import DeleteTodo from './DeleteTodo'
+
 import {connect} from 'react-redux'
 import {toggleStatus} from '../redux/actions/dataActions'
 
-import MyButton from './MyButton'
+//import MyButton from './MyButton'
 
 const styles = (theme) => ({
     ...theme.spread,
@@ -19,6 +22,16 @@ const styles = (theme) => ({
         "&:hover": {
             background: "#efefef"
         }
+    },
+    todoContent : {
+        display : 'flex',
+        flexDirection : 'row'
+    },
+    delete : {
+        position : 'absolute',
+        left : '43%',
+        color : '#757575',
+        fontSize : '20px'
     },
     checkbox : {
         position : 'absolute',
@@ -44,19 +57,19 @@ class TodoItem extends Component {
     }
 
     render() {
-        const { classes, todo : {  description, status, label}} = this.props
+        const { classes, todo : { todoId, description, status, label}} = this.props
         return (
-            
                 <Card className={classes.todoCard} 
-                    style={{borderLeft : label === 'personal' ? '20px solid #ad1457' :
-                    (label === 'work' ? '20px solid #6a1b9a' : '20px solid #0d47a1'   )}}>
-                    <CardContent>
+                    style={{borderLeft : label === 'personal' ? '15px solid #ad1457' :
+                    (label === 'work' ? '15px solid #6a1b9a' : '15px solid #0d47a1'   )}}>
+                    <CardContent className={classes.todoContent}>
                         <Tooltip title={label} placement="top">
                             <Typography style={{textDecoration : status === 'complete' ? 'line-through' : ''}}>
                             {description}
                             </Typography>
                         </Tooltip> 
-                        <input type="checkbox" label="Status" name="status" onClick={this.handleToggleStatus} 
+                        <DeleteTodo todoId={todoId}/>
+                        <input type="checkbox" label="Status" name="status" onAbort={this.handleToggleStatus} 
                             checked = {status === 'complete' ? true : false} 
                             className={classes.checkbox} onChange={this.handleChange} />
                         

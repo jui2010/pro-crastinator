@@ -130,4 +130,14 @@ app.get('/toggleStatus/:todoId', (req, res) => {
         })
 })
 
+//delete a todo 
+app.delete('/deleteTodo/:todoId', (req, res) => {
+    db.doc(`/todos/${req.params.todoId}`)
+    .delete()
+    .then(() => {
+        return res.json({message : "Scream deleted "})
+    })
+    .catch(err => console.log(err))
+})
+
 exports.api = functions.https.onRequest(app)
