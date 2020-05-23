@@ -84,7 +84,7 @@ export class CalendarCells extends Component {
                 //console.log(new Date(y, m, d))
                 cells.push(
                     <Grid item xs={1} key={y-m-d}>
-                        <Paper  elevation={3} className={classes.day}>
+                        <Paper elevation={3} className={classes.day}>
                             <div className={classes.dayDiv}>
                                 <b>{format(day, 'd')}</b>
                             </div>

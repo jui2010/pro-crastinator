@@ -69,10 +69,9 @@ class TodoItem extends Component {
                             </Typography>
                         </Tooltip> 
                         <DeleteTodo todoId={todoId}/>
-                        <input type="checkbox" label="Status" name="status" onAbort={this.handleToggleStatus} 
+                        <input type="checkbox" label="Status" name="status" onClick={this.handleToggleStatus} 
                             checked = {status === 'complete' ? true : false} 
                             className={classes.checkbox} onChange={this.handleChange} />
-                        
                     </CardContent>
                 </Card>
             

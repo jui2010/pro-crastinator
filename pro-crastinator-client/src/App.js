@@ -20,6 +20,7 @@ import login from './pages/login'
 import home from './pages/home'
 import welcome from './pages/welcome'
 import monthView from './pages/monthView'
+import profile from './pages/profile'
 
 //component
 import NavBar from './components/NavBar'
@@ -40,6 +41,7 @@ class App extends Component {
                 <Route exact path="/login" component={login} />
                 <Route exact path="/signup" component={signup} />
                 <Route exact path="/month-view" component={monthView} />
+                <Route exact path="/profile" component={profile} />
               </Switch>
             </div>
           </Router>
