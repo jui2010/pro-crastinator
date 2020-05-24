@@ -12,7 +12,7 @@ const styles = (theme) => ({
       textAlign : 'center',
     },
     mainDiv : {
-        border : 'solid 1px #bdbdbd'
+        border : 'solid 1px #e0e0e0'
     }
 })
 

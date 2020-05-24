@@ -16,7 +16,7 @@ const styles = (theme) => ({
         marginBottom : 0,
     },
     navContainer : {
-        margin: 'auto',
+        margin: 'auto'
     }
 })
 
@@ -32,7 +32,7 @@ class NavBar extends Component {
                             <Button color="inherit" component = {Link} to="/month-view" >Month-wise</Button>
                             <Button color="inherit" component = {Link} to="/login" >Login</Button>
                             <Button color="inherit" component = {Link} to="/signup" >Signup</Button>
-                            <Button color="inherit" component = {Link} to="/profile" >Profile</Button>
+                            <Button color="inherit" component = {Link} to="/profile" ></Button>
                             <PostTodo />
                         </Fragment>
                     </Toolbar>

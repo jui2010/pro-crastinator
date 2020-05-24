@@ -13,7 +13,7 @@ import subDays from 'date-fns/subDays'
 import startOfWeek from 'date-fns/startOfWeek'
 import endOfWeek from 'date-fns/endOfWeek'
 import differenceInCalendarDays from 'date-fns/differenceInCalendarDays'
-// import parseISO from 'date-fns/parseISO'
+import parseISO from 'date-fns/parseISO'
 //import formatISO from 'date-fns/formatISO'
 
 import getDate from 'date-fns/getDate'
@@ -27,28 +27,61 @@ const styles = (theme) => ({
     currMonth : {
       textAlign : 'center',
     },
-    mainDiv : {
-        border : 'solid 1px #bdbdbd',
+    totalTaskComplete : {
+        fontSize : '15px',
+        marginBottom : '10px'
+    },
+    taskDisplayDiv : {
+        fontSize : '15px',
+        marginTop : '10px'
+    },
+    timelineMainDiv : {
+        border : 'solid 1px #e0e0e0',
+        fontSize : '11px',
+    },
+    timelineDiv : {
         display : 'flex',
         flexDirection : 'row',
-        paddingBottom : '35px'
+        paddingBottom : '10px'
+    },
+    colorCodeDiv : {
+        display : 'flex',
+        flexDirection : 'row',
+        paddingBottom : '10px',
+        marginLeft : '710px'
     },
     day : {
         width: theme.spacing(1.4),
         height: theme.spacing(1.4),
-        margin : '1.7px',
+        margin : '1.6px',
         backgroundColor : 'white'
+    },
+    colorCodeLess : {
+        width: theme.spacing(1.4),
+        height: theme.spacing(1.4),
+        margin : '0px 20px 1.6px 1.6px'
+    },
+    colorCodeCell : {
+        width: theme.spacing(1.4),
+        height: theme.spacing(1.4),
+        margin : '1.6px',
+        backgroundColor : 'white'
+    },
+    colorCodeMore : {
+        width: theme.spacing(1.4),
+        height: theme.spacing(1.4),
+        margin : '0px 8px 1.6px 5px'
     },
     dayOfDate : {
         width: theme.spacing(1.4),
         height: theme.spacing(1.4),
-        margin : '1.6px 15px 1.6px 25px',
+        margin : '0px 15px 2px 25px',
         fontSize : '10px'
     },
     month : {
         width: theme.spacing(1.5),
         height: theme.spacing(1.5),
-        margin : '25px 1.6px 5px 1.6px',
+        margin : '25px 1.6px 6px 1.6px',
         fontSize : '10px'
     }
 })
@@ -59,6 +92,44 @@ class Timeline extends Component {
         today : new Date()
     }
 
+    getCountOfCompletedTasksInOneDay(day){
+        let completeTaskCount = 0
+        let d = getDate(day)
+        let m = getMonth(day)
+        let y = getYear(day)
+
+        const {todos} = this.props.data
+        todos.map(({createdAt, username, label, status}) => {
+            let createdAtd = getDate(parseISO(createdAt))
+            let createdAtm = getMonth(parseISO(createdAt))
+            let createdAty = getYear(parseISO(createdAt))
+            if(d === createdAtd & m === createdAtm & y === createdAty & status === "complete"){
+                completeTaskCount = completeTaskCount +1
+            }
+        })
+        return completeTaskCount
+    }
+
+    getMaxOfCompletedTasksInOneYear(dateOneYearBackStartDate){
+        let day = dateOneYearBackStartDate
+
+        let maxCount = 0
+        let completeTaskCount = 0
+        let allTaskCount = 0
+        while(day <= this.state.today){
+            completeTaskCount = this.getCountOfCompletedTasksInOneDay(day)
+            allTaskCount = allTaskCount + completeTaskCount
+            if(completeTaskCount > maxCount){
+                maxCount = completeTaskCount
+            }
+
+            day = addDays(day ,1)
+        }
+
+        let op = [maxCount, allTaskCount]
+        return op
+    }
+
     render() {
         const {classes} = this.props
 
@@ -66,17 +137,25 @@ class Timeline extends Component {
         let dateOneYearBackStartDate = startOfWeek(dateOneYearBack)
         let todayEndDate = endOfWeek(this.state.today )
 
-
         let column = []
         let cell = []
 
         let diff = differenceInCalendarDays(todayEndDate , dateOneYearBackStartDate) + 1
         let day = dateOneYearBackStartDate
         
+        let c1 = '#ba68c8'
+        let c2 = '#9c27b0'
+        let c3 = '#7b1fa2'
+        let c4 = '#4a148c'
         console.log(dateOneYearBack)
         console.log(dateOneYearBackStartDate)
         console.log(todayEndDate)
         console.log(diff)
+
+        let opCompleteTaskCount = this.getMaxOfCompletedTasksInOneYear(dateOneYearBackStartDate)
+        let maxCompleteTaskCount = opCompleteTaskCount[0]
+        let allCompleteTaskCount = opCompleteTaskCount[1]
+
 
         cell.push(
             <div className={classes.dayOfDate} style={{marginTop:'25px'}}>
@@ -105,10 +184,12 @@ class Timeline extends Component {
                 let mon = format(day, 'MMM')
                 let y = getYear(day)
 
-                let tip = mon+" "+d+", "+y
+                let completeTaskCount = this.getCountOfCompletedTasksInOneDay(day)
+
+                let tip = completeTaskCount === 0 ? "No tasks completed on "+mon+" "+d+", "+y : completeTaskCount+" tasks completed on "+mon+" "+d+", "+y
 
                 if(i === 0 ){
-                    if(col % 5 === 1){
+                    if(col % 4 === 1){
                         cell.push(
                             <div key={tip}  className={classes.month}>
                                 {mon}
@@ -121,12 +202,17 @@ class Timeline extends Component {
                         )
                     }
                 }else{
-                    cell.push(
-                        <Tooltip title={tip}>
-                            <div key={tip}  className={classes.day}>
-                            </div>
-                        </Tooltip>
-                    )
+                    let perTasks = completeTaskCount/maxCompleteTaskCount
+                    if(day<= this.state.today){
+                        cell.push(
+                            <Tooltip title={tip}>
+                                <div key={tip}  className={classes.day}
+                                style={{backgroundColor: completeTaskCount === 0 | maxCompleteTaskCount === 0 ? 'white' : perTasks <= 0.25 ? c1 : (perTasks <= 0.50 ? c2 : (perTasks <= 0.75 ? c3 : c4) ) }}>
+                                
+                                </div>
+                            </Tooltip>
+                        )
+                    }
                 }
                 if(i>0)
                     day = addDays(day ,1)
@@ -140,12 +226,51 @@ class Timeline extends Component {
             col = col + 1
         }
 
+        let colorCode = []
+        for(let i=1 ; i<=7; i++){
+            if(i === 1){
+                colorCode.push(
+                    <div className={classes.colorCodeLess}>Less
+                    </div>
+                )
+            } else if (i===7){
+                colorCode.push(
+                    <div className={classes.colorCodeMore} >More
+                    </div>
+                )
+            }else {
+                colorCode.push(
+                    <div className={classes.colorCodeCell} style={{backgroundColor : i===2 ? 'white' : i===3 ? c1 : i===4 ? c2 : i===5 ? c3 : c4}}>
+                    </div>
+                )
+            }
+        }
         return (
-            <div className={classes.mainDiv}>
-                {column}
+            <div className = {classes.mainDiv}>
+                <div className = {classes.totalTaskComplete}>
+                    {allCompleteTaskCount === 0 ? 'No' : allCompleteTaskCount} tasks completed in the last year
+                </div>
+                <div className = {classes.timelineMainDiv}>
+                    <div className={classes.timelineDiv}>
+                        {column}
+                    </div>
+                    <div className={classes.colorCodeDiv}>
+                        {colorCode}
+                    </div>
+                </div>
+                <div className={classes.taskDisplayDiv} >
+                    Display tasks on selected date
+                </div>
             </div>
+            
+            
         )
     }
 }
 
-export default (withStyles(styles)(Timeline))
+const mapStateToProps = (state) => ({
+    data : state.data,
+    UI : state.UI
+})
+
+export default connect(mapStateToProps )(withStyles(styles)(Timeline))
