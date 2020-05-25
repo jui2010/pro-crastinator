@@ -1,11 +1,11 @@
-import {SET_PREV_MONTH, SET_NEXT_MONTH, SELECT_DATE} from '../types'
+import {SET_PREV_MONTH, SET_NEXT_MONTH, SELECT_DATE, SET_TOGGLE_STATUS_FILTER} from '../types'
 import addMonths from 'date-fns/addMonths'
 import subMonths from 'date-fns/subMonths'
-import getMonth from 'date-fns/getMonth'
 
 let initialState = { 
     currMonth : new Date(),
-    selectedDate : new Date().toISOString()
+    selectedDate : new Date().toISOString(),
+    toggleStatusFilter : 'none'
 }
 
 export default function(state = initialState , action){
@@ -23,8 +23,12 @@ export default function(state = initialState , action){
         case SELECT_DATE : 
             return {
                 ...state,
-                // selectedDate : getMonth(action.payload)
                 selectedDate : action.payload
+            }
+        case SET_TOGGLE_STATUS_FILTER : 
+            return {
+                ...state,
+                toggleStatusFilter : action.payload
             }
         default : 
             return {
