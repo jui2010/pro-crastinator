@@ -61,7 +61,7 @@ class TodoItem extends Component {
         return (
                 <Card className={classes.todoCard} 
                     style={{borderLeft : label === 'personal' ? '15px solid #ad1457' :
-                    (label === 'work' ? '15px solid #6a1b9a' : '15px solid #0d47a1'   )}}>
+                    (label === 'office' ? '15px solid #6a1b9a' : '15px solid #0d47a1'   )}}>
                     <CardContent className={classes.todoContent}>
                         <Tooltip title={label} placement="top">
                             <Typography style={{textDecoration : status === 'complete' ? 'line-through' : ''}}>

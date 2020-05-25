@@ -7,6 +7,7 @@ export const LOADING_USER = 'LOADING_USER'
 //ui reducer types
 export const SET_PREV_MONTH = 'SET_PREV_MONTH'
 export const SET_NEXT_MONTH = 'SET_NEXT_MONTH'
+export const SELECT_DATE = 'SELECT_DATE'
 
 //data reducer types
 export const SET_TODOS = 'SET_TODOS'

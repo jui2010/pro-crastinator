@@ -14,6 +14,8 @@ import startOfWeek from 'date-fns/startOfWeek'
 import endOfWeek from 'date-fns/endOfWeek'
 import differenceInCalendarDays from 'date-fns/differenceInCalendarDays'
 import parseISO from 'date-fns/parseISO'
+import parse from 'date-fns/parse'
+import toDate from 'date-fns/toDate'
 //import formatISO from 'date-fns/formatISO'
 
 import getDate from 'date-fns/getDate'
@@ -21,6 +23,10 @@ import getMonth from 'date-fns/getMonth'
 import getYear from 'date-fns/getYear'
 
 import {connect} from 'react-redux'
+import {setSelectedDate} from '../redux/actions/uiActions'
+import LabelImportantIcon from '@material-ui/icons/LabelImportant'
+import LinearScaleIcon from '@material-ui/icons/LinearScale'
+
 
 const styles = (theme) => ({
     ...theme.spread,
@@ -33,7 +39,8 @@ const styles = (theme) => ({
     },
     taskDisplayDiv : {
         fontSize : '15px',
-        marginTop : '10px'
+        marginTop : '10px',
+        marginTop : '35px'
     },
     timelineMainDiv : {
         border : 'solid 1px #e0e0e0',
@@ -89,9 +96,8 @@ const styles = (theme) => ({
 class Timeline extends Component {
 
     state = {
-        today : new Date()
+        currMonth : new Date()
     }
-
     getCountOfCompletedTasksInOneDay(day){
         let completeTaskCount = 0
         let d = getDate(day)
@@ -111,12 +117,13 @@ class Timeline extends Component {
     }
 
     getMaxOfCompletedTasksInOneYear(dateOneYearBackStartDate){
+
         let day = dateOneYearBackStartDate
 
         let maxCount = 0
         let completeTaskCount = 0
         let allTaskCount = 0
-        while(day <= this.state.today){
+        while(day <= this.state.currMonth){
             completeTaskCount = this.getCountOfCompletedTasksInOneDay(day)
             allTaskCount = allTaskCount + completeTaskCount
             if(completeTaskCount > maxCount){
@@ -130,12 +137,18 @@ class Timeline extends Component {
         return op
     }
 
+    onDateClick = day => {
+        console.log(day)
+        this.props.setSelectedDate(day)
+    }
+
     render() {
         const {classes} = this.props
+        const {currMonth, selectedDate} = this.props.UI
 
-        let dateOneYearBack = subDays(this.state.today , 365 )
+        let dateOneYearBack = subDays(this.state.currMonth , 365 )
         let dateOneYearBackStartDate = startOfWeek(dateOneYearBack)
-        let todayEndDate = endOfWeek(this.state.today )
+        let todayEndDate = endOfWeek(this.state.currMonth )
 
         let column = []
         let cell = []
@@ -143,14 +156,10 @@ class Timeline extends Component {
         let diff = differenceInCalendarDays(todayEndDate , dateOneYearBackStartDate) + 1
         let day = dateOneYearBackStartDate
         
-        let c1 = '#ba68c8'
-        let c2 = '#9c27b0'
-        let c3 = '#7b1fa2'
+        let c1 = '#e1bee7'
+        let c2 = '#ba68c8'
+        let c3 = '#8e24aa'
         let c4 = '#4a148c'
-        console.log(dateOneYearBack)
-        console.log(dateOneYearBackStartDate)
-        console.log(todayEndDate)
-        console.log(diff)
 
         let opCompleteTaskCount = this.getMaxOfCompletedTasksInOneYear(dateOneYearBackStartDate)
         let maxCompleteTaskCount = opCompleteTaskCount[0]
@@ -162,7 +171,7 @@ class Timeline extends Component {
             </div>
         )
         for(let i=1 ; i<=7; i++){
-            let dayOfDate = format(day, 'EEE')
+            let dayOfDate = format(day, "EEE")
             cell.push(
                 <div key={dayOfDate} className={classes.dayOfDate}>
                     {dayOfDate}
@@ -187,7 +196,7 @@ class Timeline extends Component {
                 let completeTaskCount = this.getCountOfCompletedTasksInOneDay(day)
 
                 let tip = completeTaskCount === 0 ? "No tasks completed on "+mon+" "+d+", "+y : completeTaskCount+" tasks completed on "+mon+" "+d+", "+y
-
+                let dayString = day.toISOString()
                 if(i === 0 ){
                     if(col % 4 === 1){
                         cell.push(
@@ -203,14 +212,16 @@ class Timeline extends Component {
                     }
                 }else{
                     let perTasks = completeTaskCount/maxCompleteTaskCount
-                    if(day<= this.state.today){
+                    if(day <= this.state.currMonth){
+
                         cell.push(
+                            
                             <Tooltip title={tip}>
-                                <div key={tip}  className={classes.day}
+                                <div key={tip}  className={classes.day} 
+                                onClick={() => this.onDateClick(dayString)}
                                 style={{backgroundColor: completeTaskCount === 0 | maxCompleteTaskCount === 0 ? 'white' : perTasks <= 0.25 ? c1 : (perTasks <= 0.50 ? c2 : (perTasks <= 0.75 ? c3 : c4) ) }}>
-                                
                                 </div>
-                            </Tooltip>
+                            </Tooltip>  
                         )
                     }
                 }
@@ -245,6 +256,85 @@ class Timeline extends Component {
                 )
             }
         }
+
+        let selectedDated = getDate(parseISO(selectedDate))
+        let selectedDatem = getMonth(parseISO(selectedDate))
+        let selectedDatemon = format(parseISO(selectedDate), "MMM")
+        let selectedDatey = getYear(parseISO(selectedDate))
+        const {todos} = this.props.data
+        let officeTasksOnSelectedDay = []
+        let personalTasksOnSelectedDay = []
+        let generalTasksOnSelectedDay = []
+        let officeCount = 0
+        let personalCount = 0
+        let generalCount = 0
+
+        todos.map(({todoId , description, createdAt, status, label}) => {
+            let createdAtd = getDate(parseISO(createdAt))
+            let createdAtm = getMonth(parseISO(createdAt))
+            let createdAty = getYear(parseISO(createdAt))
+
+            if(selectedDated === createdAtd & selectedDatem === createdAtm & selectedDatey === createdAty & status === "complete"){
+                if(label === "personal"){
+                    personalCount = personalCount + 1
+                    personalTasksOnSelectedDay.push(
+                        <div key={todoId}><LinearScaleIcon style={{fontSize : '12px'}}/>{description}</div>
+                    )
+                }
+                if(label === "office"){
+                    officeCount = officeCount + 1
+                    officeTasksOnSelectedDay.push(
+                        <div key={todoId}><LinearScaleIcon style={{fontSize : '13px'}}/>{description}</div>
+                    )
+                }
+                if(label === "general"){
+                    generalCount = generalCount + 1
+                    generalTasksOnSelectedDay.push(
+                        <div key={todoId} style={{ marginBottom:'10px'}}><LinearScaleIcon style={{fontSize : '13px', marginRight:'15px'}}/>{description}</div>
+                    )
+                }
+                
+            }
+        })
+
+        let renderTask = (
+            <div>
+                <div>Tasks activity</div>
+                <div className="separator" style={{fontSize : '13px'}}>
+                    {selectedDatemon + " " + selectedDated + ", " + selectedDatey }
+                </div>
+                <div style={{marginTop : '20px'}}>
+                    {personalTasksOnSelectedDay.length === 0 & officeTasksOnSelectedDay.length === 0 & 
+                    generalTasksOnSelectedDay.length === 0 ? "No tasks completion activity " : ""}
+                </div>
+                <div style={{marginTop : '20px'}}>
+                    {personalTasksOnSelectedDay.length === 0 ? '' :(
+                        <div style={{marginLeft : '15px'}}>
+                            <LabelImportantIcon style={{fontSize : '17px'}} />  Completed {personalCount} personal tasks
+                            <div style={{marginLeft : '15px'}}>{personalTasksOnSelectedDay}</div>
+                        </div>
+                    )}
+                </div>
+                <div style={{marginTop : '20px'}}>
+                    {officeTasksOnSelectedDay.length === 0 ? '' :(
+                        <div style={{marginLeft : '15px'}}>
+                            <LabelImportantIcon style={{fontSize : '17px'}}/>  Completed {officeCount} office tasks
+                            <div style={{marginLeft : '15px'}}>{officeTasksOnSelectedDay}</div>
+                        </div>
+                    )}
+                </div>
+                <div style={{marginTop : '20px'}}>
+                    {generalTasksOnSelectedDay.length === 0 ? '' :(
+                        <div style={{marginLeft : '15px'}}>
+                            <LabelImportantIcon style={{fontSize : '17px'}}/>  Completed {generalCount} general tasks
+                            <div style={{marginLeft : '15px'}}>{generalTasksOnSelectedDay}</div>
+                        </div>
+                    )}
+                </div>
+            </div>
+            
+        )
+
         return (
             <div className = {classes.mainDiv}>
                 <div className = {classes.totalTaskComplete}>
@@ -259,7 +349,7 @@ class Timeline extends Component {
                     </div>
                 </div>
                 <div className={classes.taskDisplayDiv} >
-                    Display tasks on selected date
+                    {renderTask}
                 </div>
             </div>
             
@@ -273,4 +363,4 @@ const mapStateToProps = (state) => ({
     UI : state.UI
 })
 
-export default connect(mapStateToProps )(withStyles(styles)(Timeline))
+export default connect(mapStateToProps , {setSelectedDate})(withStyles(styles)(Timeline))
