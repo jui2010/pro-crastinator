@@ -1,6 +1,7 @@
 import {SET_TODOS, LOADING_DATA, SET_TOGGLE_STATUS, POST_TODO, DELETE_TODO} from '../types'
 
 const initialState = {
+    userInfo : '',
     todos : [],
     loading : false
 }
@@ -14,8 +15,8 @@ export default function (state = initialState, action){
             } 
         case SET_TODOS : 
             return {
-                ...state,
-                todos : action.payload,
+                userInfo : action.payload.userInfo,
+                todos : action.payload.todos,
                 loading : false
             } 
         case SET_TOGGLE_STATUS :

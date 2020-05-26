@@ -47,7 +47,7 @@ class PostTodo extends Component {
         const newTodo = {
             description : this.state.description,
             label : this.state.label,
-            username : 'jui',
+            username : this.props.data.userInfo.username,
             dueAt : this.state.dueAt,
         }
         this.props.postTodo(newTodo)

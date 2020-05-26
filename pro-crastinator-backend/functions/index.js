@@ -1,10 +1,9 @@
 const functions = require('firebase-functions');
 const app = require('express')()
 
-const admin = require('firebase-admin')
-admin.initializeApp()
+const {admin , db} = require('./util/admin')
 
-const db = admin.firestore()    
+const FBAuth = require('./util/FBAuth')
 
 var firebaseConfig = {
     apiKey: "AIzaSyBIxTzwTTQ32FyjcAB-k_X0_MFswzgyA-U",
@@ -21,71 +20,102 @@ const firebase = require('firebase')
 firebase.initializeApp(firebaseConfig)
 
 //signup a user
-app.post('/signup', (req , res ) => {
+app.post('/signup' , (req , res) => {
     const newUser = {
         email : req.body.email,
         password : req.body.password,
         confirmPassword : req.body.confirmPassword,
-        username : req.body.username,
+        username : req.body.username
     }
 
-    //TODO validate user
-    let token, userId
-    db.doc(`/users/${newUser.username}`).get()
-    .then(doc => {
-        if(doc.exists){
-            return res.status(400).json({username : `This username already exists`})
-        }else{
-            return firebase.auth().createUserWithEmailAndPassword(newUser.email , newUser.password)
-        }
-    })
-    .then(data => {
-        userId = data.user.uid
-        return data.user.getIdToken()
-    })
-    .then((idToken) => {
-        token = idToken
-        const userCredentials = {
-            username : newUser.username,
-            email : newUser.email,
-            password : newUser.password,
-            userId
-        }
-        return db.doc(`/users/${newUser.username}`).set(userCredentials)
-    }) 
-    .then(() => {
-        return res.status(201).json({token})
-    })
-    .catch(err => {
-        console.log(err)
-        if(err.code === 'auth/email-already-in-use'){
-            return res.status(400),json({email : 'Email already in use'})
-        }else{
-            return res.status(500).json({error : err.code})
-        }
-    })
+    db.doc(`/users/${newUser.username}`)
+        .get()
+        .then(doc => {
+            if(doc.exists ) {
+                return res.status(400).json({username : 'This username is already in use'})
+            }else if(newUser.password !== newUser.confirmPassword){
+                return res.status(400).json({confirmPassword : 'Passwords do not match'})
+            }else {
+                return firebase.auth().createUserWithEmailAndPassword(newUser.email , newUser.password)
+            }
+        })
+        .then(data => {
+            userId = data.user.uid
+            return data.user.getIdToken()
+        })
+        .then(idToken => {
+            token = idToken
+            const userCredentials = {
+                email : newUser.email,
+                username  : newUser.username,
+                createdAt : new Date().toISOString(),
+                userId
+            }
+            db.doc(`users/${newUser.username}`).set(userCredentials)
+        })
+        .then(() => {
+            return res.status(201).json({token})
+        })
+        .catch(err => {
+            if(err.code === "auth/email-already-in-use")
+                return res.status(500).json({email : "This email is already in use"})
+            else
+                return res.status(500).json({err : err.code})
+        })
 })
 
-//get TODOS
-app.get('/getTodos', (req, res) => {
-    db.collection('todos')
-        .orderBy('createdAt' , 'desc')
-        .get()
+
+//login a user
+app.post('/login' , (req , res) => {
+    const newUser = {
+        email : req.body.email,
+        password : req.body.password
+    }
+
+    firebase.auth()
+        .signInWithEmailAndPassword(newUser.email, newUser.password)
         .then(data => {
-            let todosArray = []
+            return data.user.getIdToken()
+        })
+        .then(token => {
+            return res.json(token)
+        })
+        .catch(err => {
+            if(err.code === "auth/wrong-password")
+                return res.status(403).json({password : 'Incorrect password'})
+            else
+                return res.status(403).json(err.code)
+        })
+})
+
+//get TODOS and user Info of the AUthenticated User
+app.get('/getAuthenticatedUserDataAndTodos', FBAuth, (req, res) => {
+    let userData = {}
+    db.doc(`/users/${req.user.username}`)
+        .get()
+        .then(doc => {
+            if(doc.exists){
+                userData.userInfo = doc.data()
+                return db.collection('todos').where('username' , '==', req.user.username).get()
+            }
+        })
+        .then(data => {
+            userData.todos = []
             data.forEach(doc => {
-                todosArray.push({
-                    todoId : doc.id,
-                    ...doc.data()
-                })    
+                userData.todos.push(doc.data())
             })
-            return res.json(todosArray)
-    })
-    .catch(err => console.log(err))
+        })
+        .then(() => {
+            return res.json(userData)
+        })
+        .catch(err => {
+            return res.status(500).json({err : err.code})
+        })
+
 })
 
 //post a new TODO
-app.post('/postTodo', (req, res) => {
+app.post('/postTodo', FBAuth, (req, res) => {
     let newTodo = {
         label : req.body.label,
         description : req.body.description,
@@ -108,7 +138,7 @@ app.post('/postTodo', (req, res) => {
 })
 
 //toggle the done/not done status of a Todo
-app.get('/toggleStatus/:todoId', (req, res) => {
+app.get('/toggleStatus/:todoId', FBAuth, (req, res) => {
     db.doc(`/todos/${req.params.todoId}`)
         .get()
         .then(doc => {
@@ -131,7 +161,7 @@ app.get('/toggleStatus/:todoId', (req, res) => {
 })
 
 //delete a todo 
-app.delete('/deleteTodo/:todoId', (req, res) => {
+app.delete('/deleteTodo/:todoId', FBAuth, (req, res) => {
     db.doc(`/todos/${req.params.todoId}`)
     .delete()
     .then(() => {

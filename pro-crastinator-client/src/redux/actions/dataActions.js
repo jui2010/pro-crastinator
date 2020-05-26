@@ -6,7 +6,7 @@ export const getTodos = () => (dispatch) => {
     dispatch({
         type : LOADING_DATA
     })
-    axios.get('/getTodos')
+    axios.get('/getAuthenticatedUserDataAndTodos')
     .then(res => {
         dispatch({
             type : SET_TODOS,
