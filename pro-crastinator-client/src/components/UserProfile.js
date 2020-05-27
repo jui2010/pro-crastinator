@@ -1,10 +1,7 @@
 import React, { Component } from 'react'
-import Grid from '@material-ui/core/Grid'
-import Paper from '@material-ui/core/Paper'
 import withStyles from '@material-ui/core/styles/withStyles'
 
-
-import {connect} from 'react-redux'
+//import {connect} from 'react-redux'
 
 const styles = (theme) => ({
     ...theme.spread,

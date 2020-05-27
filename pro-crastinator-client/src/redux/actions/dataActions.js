@@ -2,7 +2,7 @@ import {SET_TODOS, LOADING_DATA, SET_TOGGLE_STATUS, POST_TODO, DELETE_TODO} from
 import axios from 'axios'
 
 //get the todo items
-export const getTodos = () => (dispatch) => {
+export const getAuthenticatedUserDataAndTodos = () => (dispatch) => {
     dispatch({
         type : LOADING_DATA
     })

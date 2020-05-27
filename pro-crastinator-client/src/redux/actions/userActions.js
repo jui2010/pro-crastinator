@@ -1,4 +1,4 @@
-import {SET_AUTHENTICATED , LOADING_USER} from '../types'
+import {SET_AUTHENTICATED , LOADING_USER, SET_UNAUTHENTICATED} from '../types'
 import axios from 'axios'
 
 export const signupUser = (newUser, history) => (dispatch) => {
@@ -35,6 +35,14 @@ export const loginUser = (newUser, history) => (dispatch) => {
         })
 }
 
+export const logoutUser = () => (dispatch) => {
+    localStorage.removeItem('FBIdToken')
+    delete axios.defaults.headers.common['Authorization']
+
+    dispatch({
+        type : SET_UNAUTHENTICATED
+    })
+}
 const setAuthorizationHeader = (token) => {   
     const FBIdToken = `Bearer ${token}`
     //store the token on local machine, so if page refreshes.. user doesnt have to login again

@@ -1,6 +1,4 @@
 import React, { Component } from 'react'
-import Grid from '@material-ui/core/Grid'
-import Paper from '@material-ui/core/Paper'
 import Tooltip from '@material-ui/core/Tooltip';
 import format from "date-fns/format"
 
@@ -14,8 +12,6 @@ import startOfWeek from 'date-fns/startOfWeek'
 import endOfWeek from 'date-fns/endOfWeek'
 import differenceInCalendarDays from 'date-fns/differenceInCalendarDays'
 import parseISO from 'date-fns/parseISO'
-import parse from 'date-fns/parse'
-import toDate from 'date-fns/toDate'
 //import formatISO from 'date-fns/formatISO'
 
 import getDate from 'date-fns/getDate'
@@ -39,8 +35,7 @@ const styles = (theme) => ({
     },
     taskDisplayDiv : {
         fontSize : '15px',
-        marginTop : '10px',
-        marginTop : '35px'
+        marginTop : '10px'
     },
     timelineMainDiv : {
         border : 'solid 1px #e0e0e0',
@@ -98,6 +93,7 @@ class Timeline extends Component {
     state = {
         currMonth : new Date()
     }
+
     getCountOfCompletedTasksInOneDay(day){
         let completeTaskCount = 0
         let d = getDate(day)
@@ -112,6 +108,7 @@ class Timeline extends Component {
             if(d === createdAtd & m === createdAtm & y === createdAty & status === "complete"){
                 completeTaskCount = completeTaskCount +1
             }
+            return ''
         })
         return completeTaskCount
     }
@@ -144,7 +141,7 @@ class Timeline extends Component {
 
     render() {
         const {classes} = this.props
-        const {currMonth, selectedDate} = this.props.UI
+        const { selectedDate} = this.props.UI
 
         let dateOneYearBack = subDays(this.state.currMonth , 365 )
         let dateOneYearBackStartDate = startOfWeek(dateOneYearBack)
@@ -295,6 +292,7 @@ class Timeline extends Component {
                 }
                 
             }
+            return ''
         })
 
         let renderTask = (

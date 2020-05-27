@@ -8,7 +8,7 @@ import TodoItem from '../components/TodoItem'
 import Filters from '../components/Filters.js'
 
 import {connect} from 'react-redux'
-import {getTodos} from '../redux/actions/dataActions'
+import {getAuthenticatedUserDataAndTodos} from '../redux/actions/dataActions'
 
 const styles = (theme) => ({
     ...theme.spread,
@@ -20,7 +20,7 @@ class home extends Component {
         const {todos} = this.props.data
         //get the todo items
         if(todos)
-            this.props.getTodos()
+            this.props.getAuthenticatedUserDataAndTodos()
     }
     
     render() {
@@ -61,4 +61,4 @@ const mapStateToProps = (state) => ({
     UI : state.UI
 })
 
-export default connect(mapStateToProps, {getTodos})(withStyles(styles)(home))
+export default connect(mapStateToProps, {getAuthenticatedUserDataAndTodos})(withStyles(styles)(home))

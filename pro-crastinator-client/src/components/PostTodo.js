@@ -57,7 +57,7 @@ class PostTodo extends Component {
     render() {
         return (
             <Fragment>
-                <MyButton onClick={this.handleOpen}>
+                <MyButton tip ={'Post a Todo'} onClick={this.handleOpen}>
                     <AddIcon color="secondary"/>
                 </MyButton>
                 
