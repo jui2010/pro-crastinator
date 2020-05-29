@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import AddIcon from '@material-ui/icons/Add'
+import EditIcon from '@material-ui/icons/Edit'
 import MyButton from './MyButton'
 import withStyles from '@material-ui/core/styles/withStyles'
 
@@ -9,18 +9,19 @@ import Dialog from '@material-ui/core/Dialog'
 import DialogTitle from '@material-ui/core/DialogTitle'
 
 import {connect} from 'react-redux'
-import {postTodo} from '../redux/actions/dataActions'
+import {editUserDetails} from '../redux/actions/dataActions'
 
 const styles = (theme) => ({
     ...theme.spread,
 })
 
-class PostTodo extends Component {
+class EditUserDetails extends Component {
     state = {
         open : false,
-        description : '',
-        label : '',
-        dueAt : ''
+        firstName : '',
+        lastName : '',
+        location : '',
+        bio : ''
     }
 
     handleOpen = () => {
@@ -43,31 +44,32 @@ class PostTodo extends Component {
 
     handleSubmit = (event) => {
         event.preventDefault()
-        const newTodo = {
-            description : this.state.description,
-            label : this.state.label,
-            username : this.props.data.userInfo.username,
-            dueAt : this.state.dueAt,
+        const userDetails = {
+            firstName : this.state.firstName,
+            lastName : this.state.lastName,
+            location : this.state.location,
+            bio : this.state.bio
         }
-        this.props.postTodo(newTodo)
+        this.props.editUserDetails(userDetails)
         this.handleClose()
     }
     
     render() {
         return (
             <Fragment>
-                <MyButton tip ={'Post a Todo'} onClick={this.handleOpen}>
-                    <AddIcon color="secondary"/>
+                <MyButton tip ={'Edit user details'} onClick={this.handleOpen}>
+                    <EditIcon color="secondary"/>
                 </MyButton>
                 
                 <Dialog open={this.state.open} onClose={this.handleClose}>
-                    <DialogTitle>Add a Todo Item</DialogTitle>
+                    <DialogTitle>Edit user details</DialogTitle>
                     <form onSubmit={this.handleSubmit}>
-                        <TextField name="description" id="description" label="Description" type="text" onChange={this.handleChange} fullWidth />
-                        <TextField name="dueAt" id="dueAt" label="Due at" type="date" onChange={this.handleChange} fullWidth />
-                        <TextField name="label" id="label" label="Label" type="text" onChange={this.handleChange} fullWidth />
+                        <TextField name="firstName" id="firstName" label="First Name" type="text" onChange={this.handleChange} fullWidth />
+                        <TextField name="lastName" id="lastName" label="Last Name" type="text" onChange={this.handleChange} fullWidth />
+                        <TextField name="location" id="location" label="Location" type="text" onChange={this.handleChange} fullWidth />
+                        <TextField name="bio" id="bio" label="Bio" type="text" onChange={this.handleChange} fullWidth />
                         <Button type="submit" variant="contained" color="primary">
-                            Post
+                            Submit
                         </Button>
                     </form>
                 </Dialog>
@@ -79,4 +81,5 @@ class PostTodo extends Component {
 const mapStateToProps = (state) => ({
     data : state.data
 })
-export default connect(mapStateToProps, {postTodo})(withStyles(styles)(PostTodo))
+
+export default connect(mapStateToProps, {editUserDetails})(withStyles(styles)(EditUserDetails))

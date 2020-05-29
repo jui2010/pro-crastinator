@@ -1,4 +1,4 @@
-import {SET_TODOS, LOADING_DATA, SET_TOGGLE_STATUS, POST_TODO, DELETE_TODO} from '../types'
+import {SET_TODOS, LOADING_DATA, SET_TOGGLE_STATUS, POST_TODO, DELETE_TODO, ADD_USER_DETAILS} from '../types'
 import axios from 'axios'
 
 //get the todo items
@@ -16,6 +16,17 @@ export const getAuthenticatedUserDataAndTodos = () => (dispatch) => {
     .catch(err => console.log(err) )
 }
 
+
+export const editUserDetails = (userDetails) => (dispatch) => {
+    axios.post('/editUserDetails' , userDetails)
+        .then(res => {
+            dispatch({
+                type : ADD_USER_DETAILS,
+                payload : res.data
+            })
+        })
+}
+
 //post a todo
 export const postTodo = (newTodo) => (dispatch) => {
     axios.post('/postTodo' , newTodo)
@@ -31,7 +42,7 @@ export const postTodo = (newTodo) => (dispatch) => {
 //toggle the todo done field
 export const toggleStatus = (todoId) => (dispatch) => {
     axios.get(`/toggleStatus/${todoId}`)
-    .then(res => {
+    .then(() => {
         dispatch({
             type : SET_TOGGLE_STATUS,
             payload : todoId

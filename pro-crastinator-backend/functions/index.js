@@ -102,7 +102,10 @@ app.get('/getAuthenticatedUserDataAndTodos', FBAuth, (req, res) => {
         .then(data => {
             userData.todos = []
             data.forEach(doc => {
-                userData.todos.push(doc.data())
+                userData.todos.push({
+                    todoId : doc.id,
+                    ...doc.data()
+                })
             })
         })
         .then(() => {
@@ -119,7 +122,7 @@ app.post('/postTodo', FBAuth, (req, res) => {
     let newTodo = {
         label : req.body.label,
         description : req.body.description,
-        username : req.body.username,
+        username : req.user.username,
         status : 'new',
         dueAt : req.body.dueAt,
         createdAt :  new Date().toISOString()
@@ -170,4 +173,20 @@ app.delete('/deleteTodo/:todoId', FBAuth, (req, res) => {
     .catch(err => console.log(err))
 })
 
+//edit user profile
+app.post('/editUserDetails/' , FBAuth , (req, res) => {
+    const userDetails = {
+        firstName : req.body.firstName,
+        lastName : req.body.lastName,
+        location : req.body.location,
+        bio : req.body.bio
+    }
+    db.doc(`/users/${req.user.username}`).set(userDetails, {merge : true})
+        .then(() => {
+            return res.json(userDetails)
+        })
+        .catch(err => {
+            console.log(err.code)
+        })
+})
 exports.api = functions.https.onRequest(app)

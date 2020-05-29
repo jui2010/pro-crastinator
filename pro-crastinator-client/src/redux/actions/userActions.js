@@ -7,6 +7,7 @@ export const signupUser = (newUser, history) => (dispatch) => {
     })
     axios.post('/signup', newUser)
         .then(res => {
+            //store the token on local machine, so if page refreshes.. user doesnt have to login again
             setAuthorizationHeader(res.data.token)
             dispatch({
                 type : SET_AUTHENTICATED
@@ -24,6 +25,7 @@ export const loginUser = (newUser, history) => (dispatch) => {
     })
     axios.post('/login', newUser)
         .then(res => {
+            //store the token on local machine, so if page refreshes.. user doesnt have to login again
             setAuthorizationHeader(res.data)
             dispatch({
                 type : SET_AUTHENTICATED
@@ -43,6 +45,7 @@ export const logoutUser = () => (dispatch) => {
         type : SET_UNAUTHENTICATED
     })
 }
+
 const setAuthorizationHeader = (token) => {   
     const FBIdToken = `Bearer ${token}`
     //store the token on local machine, so if page refreshes.. user doesnt have to login again

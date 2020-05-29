@@ -45,9 +45,13 @@ const styles = (theme) => ({
 
 class TodoItem extends Component {
 
-    handleToggleStatus = (event) => {   
+    state = {
+        status : ''
+    }
+
+    handleToggleStatus = () => {
         this.props.toggleStatus(this.props.todo.todoId)
-        console.log(this.props.todoId)
+        console.log(this.props.todo.todoId)
     }
     
     handleChange = (event) => {   
@@ -65,7 +69,7 @@ class TodoItem extends Component {
                     <CardContent className={classes.todoContent}>
                         <Tooltip title={label} placement="top">
                             <Typography style={{textDecoration : status === 'complete' ? 'line-through' : ''}}>
-                            {description}
+                                {description}
                             </Typography>
                         </Tooltip> 
                         <DeleteTodo todoId={todoId}/>

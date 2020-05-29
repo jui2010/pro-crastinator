@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom'
 import {connect} from 'react-redux'
 
 import PostTodo from './PostTodo'
+import EditUserDetails from './EditUserDetails'
 
 const styles = (theme) => ({
     ...theme.spread,
@@ -36,6 +37,7 @@ class NavBar extends Component {
                             <Button color="inherit" component = {Link} to="/month-view" >Month-wise</Button>
                             <Button color="inherit" component = {Link} to="/profile" >Profile</Button>
                             <PostTodo />
+                            <EditUserDetails />
                         </Fragment>) : (
                             <Fragment>
                             <Button color="inherit" component = {Link} to="/" >Procrastinator</Button>
