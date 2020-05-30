@@ -49,6 +49,7 @@ app.post('/signup' , (req , res) => {
                 email : newUser.email,
                 username  : newUser.username,
                 createdAt : new Date().toISOString(),
+                profileImage : 'https://firebasestorage.googleapis.com/v0/b/pro-crastinator.appspot.com/o/no-img.jpg?alt=media',
                 userId
             }
             db.doc(`users/${newUser.username}`).set(userCredentials)
