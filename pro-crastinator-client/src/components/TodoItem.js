@@ -1,59 +1,75 @@
-import React, { Component } from 'react'
+import React, { Component , Fragment} from 'react'
 
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import withStyles from '@material-ui/core/styles/withStyles'
 import Typography from '@material-ui/core/Typography'
 import Tooltip from '@material-ui/core/Tooltip'
-
-
 import DeleteTodo from './DeleteTodo'
 
-import {connect} from 'react-redux'
-import {toggleStatus} from '../redux/actions/dataActions'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Checkbox from '@material-ui/core/Checkbox'
+import CircleCheckedFilled from '@material-ui/icons/CheckCircle'
+import CircleUnchecked from '@material-ui/icons/RadioButtonUnchecked'
 
-//import MyButton from './MyButton'
+import {connect} from 'react-redux'
+import {toggleOngoingStatus, setStatusComplete} from '../redux/actions/dataActions'
 
 const styles = (theme) => ({
     ...theme.spread,
     todoCard : {
-        marginTop : '10px',
-        marginRight : '20px',
+        margin : 'auto 10px 10px 10px',
+        height: theme.spacing(5),
         "&:hover": {
             background: "#efefef"
-        }
-    },
-    todoContent : {
+        },
         display : 'flex',
-        flexDirection : 'row'
+        flexDirection : 'row',
     },
-    delete : {
-        position : 'absolute',
-        left : '43%',
-        color : '#757575',
-        fontSize : '20px'
+    todoContent1 : {
+        width: theme.spacing(3),
+        padding: theme.spacing(0),
+        marginLeft : '10px'
+    },
+    todoContent2 : {
+        width: theme.spacing(100),
+        padding: theme.spacing(1)
+    },
+    todoContent3 : {
+        padding: theme.spacing(1)
     },
     checkbox : {
-        position : 'absolute',
-        left : '45%'
-    },
-    labelBox : {
-        width: theme.spacing(22),
-        height: theme.spacing(22)
+        borderRadius: '50%'
     }
 })
 
 class TodoItem extends Component {
 
     state = {
-        status : ''
+        isHovering: false,
     }
 
-    handleToggleStatus = () => {
-        this.props.toggleStatus(this.props.todo.todoId)
+    handleMouseHover = () => {
+        this.setState({
+            isHovering : true
+        })
+    }
+
+    handleMouseNoHover = () => {
+        this.setState({
+            isHovering : false
+        })
+    }
+
+    handleOngoingStatus = () => {
+        this.props.toggleOngoingStatus(this.props.todo.todoId)
         console.log(this.props.todo.todoId)
     }
     
+    handleStatusComplete = () => {
+        this.props.setStatusComplete(this.props.todo.todoId)
+    }
+
     handleChange = (event) => {   
         this.setState({
             [event.target.name] : event.target.value
@@ -62,23 +78,38 @@ class TodoItem extends Component {
 
     render() {
         const { classes, todo : { todoId, description, status, label}} = this.props
+        const renderDeleteTodo = this.state.isHovering ? (
+            <Fragment >
+                <DeleteTodo todoId={todoId}/> 
+            </Fragment>
+        ) : ''
+
         return (
-                <Card className={classes.todoCard} 
-                    style={{borderLeft : label === 'personal' ? '15px solid #ad1457' :
-                    (label === 'office' ? '15px solid #6a1b9a' : '15px solid #0d47a1'   )}}>
-                    <CardContent className={classes.todoContent}>
-                        <Tooltip title={label} placement="top">
-                            <Typography style={{textDecoration : status === 'complete' ? 'line-through' : ''}}>
-                                {description}
-                            </Typography>
-                        </Tooltip> 
-                        <DeleteTodo todoId={todoId}/>
-                        <input type="checkbox" label="Status" name="status" onClick={this.handleToggleStatus} 
-                            checked = {status === 'complete' ? true : false} 
-                            className={classes.checkbox} onChange={this.handleChange} />
-                    </CardContent>
-                </Card>
-            
+            <Card className={classes.todoCard} onMouseEnter={this.handleMouseHover} onMouseLeave={this.handleMouseNoHover}
+                style={{borderLeft : label === 'personal' ? '7px solid #ad1457' :
+                (label === 'office' ? '7px solid #6a1b9a' : '7px solid #0d47a1'   )}}
+                onDoubleClick={this.handleStatusComplete}>
+
+                <CardContent className={classes.todoContent1}>
+                    <FormControlLabel onClick={this.handleOngoingStatus} className={classes.checkbox}
+                    checked = {status === 'complete' ? true : false}
+                    control={<Checkbox icon={<CircleUnchecked style={{ fontSize:'20px', color : status === 'ongoing' ? 'orange' : '' }}/>}
+                    checkedIcon={<CircleCheckedFilled style={{color : 'green', fontSize:'20px'}}/>} name="checked"/>}  />
+                </CardContent>
+
+                <CardContent className={classes.todoContent2}>
+                    <Tooltip title={label} placement="top">
+                        <Typography style={{textDecoration : status === 'complete' ? 'line-through' : '',  fontFamily: 'Salsa'}}>
+                            {description} 
+                        </Typography>                            
+                    </Tooltip> 
+                </CardContent>
+
+                <CardContent className={classes.todoContent3}>
+                    {renderDeleteTodo}
+                </CardContent>
+                
+            </Card>
         )
     }
 }
@@ -87,4 +118,4 @@ const mapStateToProps = (state) => ({
     data : state.data
 })
 
-export default connect(mapStateToProps, {toggleStatus})(withStyles(styles)(TodoItem))
+export default connect(mapStateToProps, {toggleOngoingStatus, setStatusComplete})(withStyles(styles)(TodoItem))

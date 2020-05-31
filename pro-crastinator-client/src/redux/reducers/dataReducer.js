@@ -1,4 +1,4 @@
-import {SET_TODOS, LOADING_DATA, SET_TOGGLE_STATUS, POST_TODO, DELETE_TODO, ADD_USER_DETAILS} from '../types'
+import {SET_TODOS, LOADING_DATA, SET_TOGGLE_ONGOING_STATUS, POST_TODO, DELETE_TODO, ADD_USER_DETAILS, SET_COMPLETE_STATUS} from '../types'
 
 const initialState = {
     userInfo : '',
@@ -30,15 +30,25 @@ export default function (state = initialState, action){
                     bio : action.payload.bio
                 }
             }
-        case SET_TOGGLE_STATUS :
+        case SET_TOGGLE_ONGOING_STATUS :
             let index = state.todos.findIndex(
                 (todo) => todo.todoId === action.payload
             )
-            if (state.todos[index].status === 'complete'){
+            if (state.todos[index].status === 'new'){
+                state.todos[index].status = 'ongoing'
+            } else if(state.todos[index].status === 'ongoing') {
                 state.todos[index].status = 'new'
             } else {
-                state.todos[index].status = 'complete'
+                state.todos[index].status = 'new'
             }
+            return {
+                ...state,
+            }
+        case SET_COMPLETE_STATUS : 
+            let ind = state.todos.findIndex(
+                (todo) => todo.todoId === action.payload
+            )
+            state.todos[ind].status = 'complete'
             return {
                 ...state,
             }

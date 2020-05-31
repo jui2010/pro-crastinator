@@ -14,7 +14,7 @@ import PostTodo from './PostTodo'
 import EditUserDetails from './EditUserDetails'
 import SimpleMenu from './SimpleMenu'
 import EventAvailableIcon from '@material-ui/icons/EventAvailable'
-
+import HomeIcon from '@material-ui/icons/Home'
 
 const styles = (theme) => ({
     ...theme.spread,
@@ -80,6 +80,7 @@ class NavBar extends Component {
                     <Toolbar className = {classes.toolBar}>
                         {authenticated ? (<Fragment>
                             <a href="/" className={classes.logoAuth}><img className={classes.logo} src={logo} alt='procrastinator'/></a>
+                            <Button className={classes.button} color="secondary" component = {Link} to="/home" ><HomeIcon/></Button>
                             <Button className={classes.button} color="secondary" component = {Link} to="/month-view" ><EventAvailableIcon/></Button>
                             <Button className={classes.button} color="secondary" ><PostTodo/></Button>
                             <a href="/profile" className={classes.profileA} ><img className={classes.profileImage} src={profileImage} alt='procrastinator'/></a>

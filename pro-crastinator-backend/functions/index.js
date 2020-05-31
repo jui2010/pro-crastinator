@@ -142,15 +142,17 @@ app.post('/postTodo', FBAuth, (req, res) => {
 })
 
 //toggle the done/not done status of a Todo
-app.get('/toggleStatus/:todoId', FBAuth, (req, res) => {
+app.get('/toggleStatusOngoing/:todoId', FBAuth, (req, res) => {
     db.doc(`/todos/${req.params.todoId}`)
         .get()
         .then(doc => {
             if(doc.exists){
-                if(doc.data().status === "complete"){
+                if(doc.data().status === "new"){
+                    return doc.ref.update({status : "ongoing"})
+                } else if(doc.data().status === "ongoing"){
                     return doc.ref.update({status : "new"})
-                } else{
-                    return doc.ref.update({status : "complete"})
+                } else {
+                    return doc.ref.update({status : "new"})
                 }
             } else {
                 return res.status(400).json({message : "todo doesnt exist"})
@@ -158,6 +160,25 @@ app.get('/toggleStatus/:todoId', FBAuth, (req, res) => {
         })
         .then(() => {
             return res.json({message : "doc done toggle updated "})
+        })
+        .catch(err => {
+            console.log(err)
+        })
+})
+
+//set status to complete
+app.get('/setStatusComplete/:todoId', FBAuth, (req, res) => {
+    db.doc(`/todos/${req.params.todoId}`)
+        .get()
+        .then(doc => {
+            if(doc.exists){
+                return doc.ref.update({status : "complete"})
+            } else {
+                return res.status(400).json({message : "todo doesnt exist"})
+            }
+        })
+        .then(() => {
+            return res.json({message : "doc status set to complete"})
         })
         .catch(err => {
             console.log(err)

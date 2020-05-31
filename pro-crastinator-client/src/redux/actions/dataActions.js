@@ -1,4 +1,4 @@
-import {SET_TODOS, LOADING_DATA, SET_TOGGLE_STATUS, POST_TODO, DELETE_TODO, ADD_USER_DETAILS} from '../types'
+import {SET_TODOS, LOADING_DATA, SET_TOGGLE_ONGOING_STATUS, POST_TODO, DELETE_TODO, ADD_USER_DETAILS, SET_COMPLETE_STATUS} from '../types'
 import axios from 'axios'
 
 //get the todo items
@@ -39,12 +39,24 @@ export const postTodo = (newTodo) => (dispatch) => {
         .catch(err => console.log(err))
 }
 
-//toggle the todo done field
-export const toggleStatus = (todoId) => (dispatch) => {
-    axios.get(`/toggleStatus/${todoId}`)
+//toggle the todo ongoing field
+export const toggleOngoingStatus = (todoId) => (dispatch) => {
+    axios.get(`/toggleStatusOngoing/${todoId}`)
     .then(() => {
         dispatch({
-            type : SET_TOGGLE_STATUS,
+            type : SET_TOGGLE_ONGOING_STATUS,
+            payload : todoId
+        })
+    })
+    .catch(err => console.log(err) )
+}
+
+//set the todo complete field
+export const setStatusComplete = (todoId) => (dispatch) => {
+    axios.get(`/setStatusComplete/${todoId}`)
+    .then(() => {
+        dispatch({
+            type : SET_COMPLETE_STATUS,
             payload : todoId
         })
     })

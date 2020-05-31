@@ -8,8 +8,8 @@ import {deleteTodo} from '../redux/actions/dataActions'
 const styles = (theme) => ({
     ...theme.spread,
     delete : {
-        position : 'absolute',
-        left : '43%',
+        // position : 'absolute',
+        // left : '43%',
         color : '#757575',
         fontSize : '20px'
     }
