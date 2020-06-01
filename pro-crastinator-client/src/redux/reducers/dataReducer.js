@@ -1,4 +1,5 @@
-import {SET_TODOS, LOADING_DATA, SET_TOGGLE_ONGOING_STATUS, POST_TODO, DELETE_TODO, ADD_USER_DETAILS, SET_COMPLETE_STATUS} from '../types'
+import {SET_TODOS, LOADING_DATA, SET_TOGGLE_ONGOING_STATUS, POST_TODO, DELETE_TODO, ADD_USER_DETAILS,
+     SET_COMPLETE_STATUS, EDIT_TODO} from '../types'
 
 const initialState = {
     userInfo : '',
@@ -69,6 +70,16 @@ export default function (state = initialState, action){
             return {
                 ...state,
                 todos : state.todos.filter((todo) => todo.todoId !== action.payload)
+            }
+        case EDIT_TODO:
+            let indx = state.todos.findIndex(todo => {
+                return todo.todoId === action.todoId
+            })
+            state.todos[indx].description = action.payload.description
+            state.todos[indx].dueAt = action.payload.dueAt
+            state.todos[indx].label = action.payload.label
+            return {
+               ...state,
             }
         default : 
             return {

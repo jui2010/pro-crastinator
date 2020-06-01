@@ -6,6 +6,7 @@ import withStyles from '@material-ui/core/styles/withStyles'
 import Typography from '@material-ui/core/Typography'
 import Tooltip from '@material-ui/core/Tooltip'
 import DeleteTodo from './DeleteTodo'
+import EditTodo from './EditTodo'
 
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Checkbox from '@material-ui/core/Checkbox'
@@ -32,10 +33,13 @@ const styles = (theme) => ({
         marginLeft : '10px'
     },
     todoContent2 : {
-        width: theme.spacing(100),
+        width: theme.spacing(95),
         padding: theme.spacing(1)
     },
     todoContent3 : {
+        padding: theme.spacing(1)
+    },
+    todoContent4 : {
         padding: theme.spacing(1)
     },
     checkbox : {
@@ -80,7 +84,13 @@ class TodoItem extends Component {
         const { classes, todo : { todoId, description, status, label}} = this.props
         const renderDeleteTodo = this.state.isHovering ? (
             <Fragment >
-                <DeleteTodo todoId={todoId}/> 
+                <DeleteTodo todoId={todoId}/>
+            </Fragment>
+        ) : ''
+
+        const renderEditTodo = this.state.isHovering ? (
+            <Fragment >
+                <EditTodo todo={this.props.todo}/>
             </Fragment>
         ) : ''
 
@@ -106,9 +116,13 @@ class TodoItem extends Component {
                 </CardContent>
 
                 <CardContent className={classes.todoContent3}>
-                    {renderDeleteTodo}
+                    {renderEditTodo}
                 </CardContent>
                 
+
+                <CardContent className={classes.todoContent4}>
+                    {renderDeleteTodo}
+                </CardContent>
             </Card>
         )
     }

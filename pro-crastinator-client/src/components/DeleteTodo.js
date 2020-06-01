@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import DeleteIcon from '@material-ui/icons/Delete'
 import withStyles from '@material-ui/core/styles/withStyles'
+import IconButton from '@material-ui/core/IconButton';
 
 import {connect} from 'react-redux'
 import {deleteTodo} from '../redux/actions/dataActions'

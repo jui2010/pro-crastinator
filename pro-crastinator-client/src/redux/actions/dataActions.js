@@ -1,4 +1,5 @@
-import {SET_TODOS, LOADING_DATA, SET_TOGGLE_ONGOING_STATUS, POST_TODO, DELETE_TODO, ADD_USER_DETAILS, SET_COMPLETE_STATUS} from '../types'
+import {SET_TODOS, LOADING_DATA, SET_TOGGLE_ONGOING_STATUS, POST_TODO, DELETE_TODO,
+     ADD_USER_DETAILS, SET_COMPLETE_STATUS, EDIT_TODO} from '../types'
 import axios from 'axios'
 
 //get the todo items
@@ -70,6 +71,19 @@ export const deleteTodo = (todoId) => (dispatch) => {
             dispatch({
                 type : DELETE_TODO,
                 payload : todoId
+            })
+        })
+        .catch(err => console.log(err))
+}
+
+//edit a todo
+export const editTodo = (todoId, todoDetails) => (dispatch) => {
+    axios.post(`/editTodo/${todoId}`, todoDetails)
+        .then(res => {
+            dispatch({
+                type : EDIT_TODO,
+                payload : res.data,
+                todoId : todoId
             })
         })
         .catch(err => console.log(err))

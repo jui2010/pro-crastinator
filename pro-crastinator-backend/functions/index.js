@@ -211,4 +211,21 @@ app.post('/editUserDetails/' , FBAuth , (req, res) => {
             console.log(err.code)
         })
 })
+
+//edit todo
+app.post(`/editTodo/:todoId` , FBAuth , (req, res) => {
+    const todoDetails = {
+        description : req.body.description,
+        dueAt : req.body.dueAt,
+        label : req.body.label
+    }
+    db.doc(`/todos/${req.params.todoId}`).set(todoDetails, {merge : true})
+        .then(() => {
+            return res.json(todoDetails)
+        })
+        .catch(err => {
+            console.log(err.code)
+        })
+})
+
 exports.api = functions.https.onRequest(app)
