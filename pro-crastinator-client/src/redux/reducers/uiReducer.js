@@ -3,6 +3,7 @@ import addMonths from 'date-fns/addMonths'
 import subMonths from 'date-fns/subMonths'
 
 let initialState = { 
+    today : new Date(),
     currMonth : new Date(),
     selectedDate : new Date().toISOString(),
     toggleStatusFilter : 'none'

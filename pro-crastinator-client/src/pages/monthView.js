@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import CalendarCells from '../components/CalendarCells'
+import CalendarCellFrame from '../components/CalendarCellFrame'
 import CalendarHeader from '../components/CalendarHeader'
 import withStyles from '@material-ui/core/styles/withStyles'
 
@@ -8,14 +8,21 @@ import {connect} from 'react-redux'
 
 const styles = (theme) => ({
   ...theme.spread,
+  mainDiv : {
+    display: 'flex', 
+    flexDirection : 'column',
+    justifyContent:'center',
+    alignItems:'center'
+  }
 })
 
 export class monthView extends Component {
   render() {
+    const {classes} = this.props
       return (
-          <div>
+          <div className={classes.mainDiv}>
             <CalendarHeader />
-            <CalendarCells />
+            <CalendarCellFrame />
           </div>
       )
   }

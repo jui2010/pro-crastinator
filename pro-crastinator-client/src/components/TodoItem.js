@@ -15,6 +15,7 @@ import CircleUnchecked from '@material-ui/icons/RadioButtonUnchecked'
 
 import {connect} from 'react-redux'
 import {toggleOngoingStatus, setStatusComplete} from '../redux/actions/dataActions'
+import Slide from '@material-ui/core/Slide'
 
 const styles = (theme) => ({
     ...theme.spread,
@@ -95,35 +96,36 @@ class TodoItem extends Component {
         ) : ''
 
         return (
-            <Card className={classes.todoCard} onMouseEnter={this.handleMouseHover} onMouseLeave={this.handleMouseNoHover}
-                style={{borderLeft : label === 'personal' ? '7px solid #ad1457' :
-                (label === 'office' ? '7px solid #6a1b9a' : '7px solid #0d47a1'   )}}
-                onDoubleClick={this.handleStatusComplete}>
+            <Slide direction="up" in={true} >
+                <Card className={classes.todoCard} onMouseEnter={this.handleMouseHover} onMouseLeave={this.handleMouseNoHover}
+                    style={{borderLeft : label === 'personal' ? '12px solid #c5cae9' :
+                    label === 'office' ? '12px solid #f8bbd0' : label === 'shopping' ? '12px solid #b2dfdb' : '12px solid #bbdefb'   }}
+                    onDoubleClick={this.handleStatusComplete}>
 
-                <CardContent className={classes.todoContent1}>
-                    <FormControlLabel onClick={this.handleOngoingStatus} className={classes.checkbox}
-                    checked = {status === 'complete' ? true : false}
-                    control={<Checkbox icon={<CircleUnchecked style={{ fontSize:'20px', color : status === 'ongoing' ? 'orange' : '' }}/>}
-                    checkedIcon={<CircleCheckedFilled style={{color : 'green', fontSize:'20px'}}/>} name="checked"/>}  />
-                </CardContent>
+                    <CardContent className={classes.todoContent1}>
+                        <FormControlLabel onClick={this.handleOngoingStatus} className={classes.checkbox}
+                        checked = {status === 'complete' ? true : false}
+                        control={<Checkbox icon={<CircleUnchecked style={{ fontSize:'20px', color : status === 'ongoing' ? '#b39ddb' : '' }}/>}
+                        checkedIcon={<CircleCheckedFilled style={{color : '#212121', fontSize:'20px'}}/>} name="checked"/>}  />
+                    </CardContent>
 
-                <CardContent className={classes.todoContent2}>
-                    <Tooltip title={label} placement="top">
-                        <Typography style={{textDecoration : status === 'complete' ? 'line-through' : '',  fontFamily: 'Salsa'}}>
-                            {description} 
-                        </Typography>                            
-                    </Tooltip> 
-                </CardContent>
+                    <CardContent className={classes.todoContent2}>
+                        <Tooltip title={label} placement="top">
+                            <Typography style={{textDecoration : status === 'complete' ? 'line-through' : '',  fontFamily: 'Salsa'}}>
+                                {description} 
+                            </Typography>                            
+                        </Tooltip> 
+                    </CardContent>
 
-                <CardContent className={classes.todoContent3}>
-                    {renderEditTodo}
-                </CardContent>
-                
+                    <CardContent className={classes.todoContent3}>
+                        {renderEditTodo}
+                    </CardContent>
 
-                <CardContent className={classes.todoContent4}>
-                    {renderDeleteTodo}
-                </CardContent>
-            </Card>
+                    <CardContent className={classes.todoContent4}>
+                        {renderDeleteTodo}
+                    </CardContent>
+                </Card>
+            </Slide>            
         )
     }
 }

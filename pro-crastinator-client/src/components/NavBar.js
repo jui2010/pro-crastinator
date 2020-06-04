@@ -39,16 +39,17 @@ const styles = (theme) => ({
         borderRadius: '50%'
     },
     logoAuth : {
-        margin : 'auto 930px 23px auto'
+        margin : 'auto 850px 23px auto'
     },
     logoNotAuth : {
-        margin : 'auto 1100px 23px auto'
+        margin : 'auto 930px 23px auto'
     },
     profileA : {
         margin : 'auto auto 23px auto'
     },
     button : {
-        marginBottom : '27px'
+        marginBottom : '27px',
+        marginLeft : ' 0px'
     },
     postTodo : {
         margin : '0px auto auto auto'
