@@ -40,6 +40,7 @@ const styles = (theme) => ({
     timelineMainDiv : {
         border : 'solid 1px #e0e0e0',
         fontSize : '11px',
+        backgroundColor : 'rgb(245, 245, 245)'
     },
     timelineDiv : {
         display : 'flex',

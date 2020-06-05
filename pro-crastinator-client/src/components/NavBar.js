@@ -11,7 +11,6 @@ import logo from '../images/logo.png'
 import {connect} from 'react-redux'
 
 import PostTodo from './PostTodo'
-import EditUserDetails from './EditUserDetails'
 import SimpleMenu from './SimpleMenu'
 import EventAvailableIcon from '@material-ui/icons/EventAvailable'
 import HomeIcon from '@material-ui/icons/Home'
@@ -86,7 +85,6 @@ class NavBar extends Component {
                             <Button className={classes.button} color="secondary" ><PostTodo/></Button>
                             <a href="/profile" className={classes.profileA} ><img className={classes.profileImage} src={profileImage} alt='procrastinator'/></a>
                             <Button className={classes.button} color="secondary" ><SimpleMenu/></Button>
-                            <Button className={classes.button} color="secondary" ><EditUserDetails/></Button>
                         </Fragment>) : (
                         <Fragment>
                             <a href="/" className={classes.logoNotAuth}><img className={classes.logo} src={logo} alt='procrastinator'/></a>

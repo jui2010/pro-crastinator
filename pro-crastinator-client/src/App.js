@@ -49,6 +49,9 @@ if(token){
 }
 
 class App extends Component {
+  state = {
+    
+  }
   render(){
     return (
       <MuiThemeProvider theme={theme}>
