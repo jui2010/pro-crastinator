@@ -49,6 +49,10 @@ app.post('/signup' , (req , res) => {
                 email : newUser.email,
                 username  : newUser.username,
                 createdAt : new Date().toISOString(),
+                firstName : '',
+                lastName : '',
+                bio : '',
+                location : '',
                 profileImage : 'https://firebasestorage.googleapis.com/v0/b/pro-crastinator.appspot.com/o/no-img.jpg?alt=media',
                 userId
             }
@@ -226,6 +230,54 @@ app.post(`/editTodo/:todoId` , FBAuth , (req, res) => {
         .catch(err => {
             console.log(err.code)
         })
+})
+
+//upload profile image
+app.post(`/uploadProfilePicture` , FBAuth, (req, res) => {
+    const BusBoy = require('busboy')
+    const os = require('os')
+    const path = require('path')
+    const fs = require('fs')
+
+    const busBoy = new BusBoy({headers : req.headers})
+
+    let pictureToBeUploaded = {}
+    let pictureFilename
+
+    busBoy.on('file', (fieldname, file, filename, encoding, mimetype) => {
+        if(mimetype !== "image/png" && mimetype !== "image/jpeg" && mimetype !== "image/jpg"){
+            res.status(400).json({filetype : "Invalid file type"})
+        }
+        
+        pictureFilename = filename
+        const picturePath = path.join(os.tmpdir(), filename)
+        pictureToBeUploaded = {picturePath, mimetype}
+        file.pipe(fs.createWriteStream(picturePath))
+    })
+
+    busBoy.on('finish', () => {
+        admin.storage().bucket().upload(pictureToBeUploaded.picturePath, {
+            resumable : false,
+            metadata : {
+                metadata : {
+                    contentType : pictureToBeUploaded.mimetype
+                }
+            }   
+        })
+        .then(() => {
+            const imageUrl = `https://firebasestorage.googleapis.com/v0/b/${firebaseConfig.storageBucket}/o/${pictureFilename}?alt=media`
+            return db.doc(`users/${req.user.username}`).update({profileImage : imageUrl})
+        })
+        .then(() => {
+            return res.json({message: "Image uploaded successfully"})
+        })
+        .catch(err => {
+            console.log(err)
+            return res.status(500).json({error : err.code})
+        })
+    })
+
+    busBoy.end(req.rawBody)
 })
 
 exports.api = functions.https.onRequest(app)

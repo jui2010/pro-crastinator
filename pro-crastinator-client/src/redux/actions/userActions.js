@@ -1,5 +1,6 @@
 import {SET_AUTHENTICATED , LOADING_USER, SET_UNAUTHENTICATED} from '../types'
 import axios from 'axios'
+import {getAuthenticatedUserDataAndTodos} from './dataActions'
 
 export const signupUser = (newUser, history) => (dispatch) => {
     dispatch({
@@ -46,9 +47,18 @@ export const logoutUser = () => (dispatch) => {
     })
 }
 
+export const uploadProfilePicture = (profilePicture) => (dispatch) => {
+    axios.post('/uploadProfilePicture', profilePicture)
+    .then(() => {
+        dispatch(getAuthenticatedUserDataAndTodos())
+    })
+    .catch(err => console.log(err))
+}
+
 const setAuthorizationHeader = (token) => {   
     const FBIdToken = `Bearer ${token}`
     //store the token on local machine, so if page refreshes.. user doesnt have to login again
     localStorage.setItem('FBIdToken' , FBIdToken )
     axios.defaults.headers.common['Authorization'] = FBIdToken
 }
+
