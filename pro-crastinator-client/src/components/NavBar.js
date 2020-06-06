@@ -82,7 +82,6 @@ class NavBar extends Component {
                             <a href="/" className={classes.logoAuth}><img className={classes.logo} src={logo} alt='procrastinator'/></a>
                             <Button className={classes.button} color="secondary" component = {Link} to="/home" ><HomeIcon/></Button>
                             <Button className={classes.button} color="secondary" component = {Link} to="/month-view" ><EventAvailableIcon/></Button>
-                            <Button className={classes.button} color="secondary" ><PostTodo/></Button>
                             <a href="/profile" className={classes.profileA} ><img className={classes.profileImage} src={profileImage} alt='procrastinator'/></a>
                             <Button className={classes.button} color="secondary" ><SimpleMenu/></Button>
                         </Fragment>) : (

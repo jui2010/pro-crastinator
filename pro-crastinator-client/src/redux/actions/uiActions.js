@@ -1,4 +1,4 @@
-import {SET_PREV_MONTH, SET_NEXT_MONTH, SELECT_DATE, SET_TOGGLE_STATUS_FILTER } from '../types'
+import {SET_PREV_MONTH, SET_NEXT_MONTH, SELECT_DATE, SET_STATUS_FILTER,SET_LABEL_FILTER,SET_cool } from '../types'
 
 
 export const getPrevMonth = () => (dispatch) => {
@@ -20,9 +20,16 @@ export const setSelectedDate = (day) => (dispatch) => {
     })
 }
 
-export const toggleStatusFilter = (status) => (dispatch) => {
+export const setStatusFilter = (status) => (dispatch) => {
     dispatch({
-        type : SET_TOGGLE_STATUS_FILTER,
+        type : SET_STATUS_FILTER,
         payload : status
+    })
+}
+
+export const setLabelFilter = (label) => (dispatch) => {
+    dispatch({
+        type : SET_LABEL_FILTER,
+        payload : label
     })
 }

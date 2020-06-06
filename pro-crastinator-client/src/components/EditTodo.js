@@ -61,13 +61,13 @@ class EditTodo extends Component {
              
                 <Dialog open={this.state.open} onClose={this.handleClose}>
                     <DialogTitle>Edit user details</DialogTitle>
-                    <form onSubmit={this.handleSubmit}>
+                    <form onSubmit={this.handleSubmit} >
                         <TextField name="description" id="description" label="Description" type="text" value={this.state.description}
-                            onChange={this.handleChange} fullWidth />
+                            onChange={this.handleChange} hiddenLabel={true} fullWidth/>
                         <TextField name="label" id="label" label="Label" type="text" value={this.state.label} 
-                            onChange={this.handleChange} fullWidth />
+                            onChange={this.handleChange} hidden='hidden' fullWidth />
                         <TextField name="dueAt" id="dueAt" label="Due At" type="date" value={this.state.dueAt} 
-                            onChange={this.handleChange} fullWidth />
+                            onChange={this.handleChange} hidden='hidden' fullWidth />
                         <Button type="submit" variant="contained" color="primary">
                             Submit
                         </Button>

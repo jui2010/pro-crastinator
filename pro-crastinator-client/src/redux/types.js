@@ -9,7 +9,8 @@ export const ADD_USER_DETAILS = 'ADD_USER_DETAILS'
 export const SET_PREV_MONTH = 'SET_PREV_MONTH'
 export const SET_NEXT_MONTH = 'SET_NEXT_MONTH'
 export const SELECT_DATE = 'SELECT_DATE'
-export const SET_TOGGLE_STATUS_FILTER = 'SET_TOGGLE_STATUS_FILTER'
+export const SET_STATUS_FILTER = 'SET_STATUS_FILTER'
+export const SET_LABEL_FILTER = 'SET_LABEL_FILTER'
 
 //data reducer types
 export const SET_TODOS = 'SET_TODOS'

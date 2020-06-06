@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import AddIcon from '@material-ui/icons/Add'
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 import MyButton from './MyButton'
 import withStyles from '@material-ui/core/styles/withStyles'
 
@@ -56,12 +56,12 @@ class PostTodo extends Component {
     render() {
         return (
             <Fragment>
-                <MyButton tip ={'Post a Todo'} onClick={this.handleOpen}>
-                    <AddIcon color="secondary" style={{fontSize : '20px'}}/>
+                <MyButton tip ={'Add task'} onClick={this.handleOpen}>
+                    <AddCircleOutlineIcon color="secondary" style={{fontSize : '20px'}}/>
                 </MyButton>
                 
                 <Dialog open={this.state.open} onClose={this.handleClose}>
-                    <DialogTitle>Add a Todo Item</DialogTitle>
+                    <DialogTitle>Add task</DialogTitle>
                     <form onSubmit={this.handleSubmit}>
                         <TextField name="description" id="description" label="Description" type="text" onChange={this.handleChange} fullWidth />
                         <TextField name="dueAt" id="dueAt" label="Due at" type="date" onChange={this.handleChange} fullWidth />

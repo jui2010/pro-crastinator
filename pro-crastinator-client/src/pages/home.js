@@ -6,6 +6,7 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import Grid from '@material-ui/core/Grid'
 import TodoItem from '../components/TodoItem'
 import Filters from '../components/Filters.js'
+import PostTodo from '../components/PostTodo'
 
 import {connect} from 'react-redux'
 import {getAuthenticatedUserDataAndTodos} from '../redux/actions/dataActions'
@@ -20,6 +21,16 @@ import parseISO from 'date-fns/parseISO'
 
 const styles = (theme) => ({
     ...theme.spread,
+    postTodo : {
+        display : 'flex',
+        flexDirection : 'row',
+        alignItems : 'center'
+    },
+    dates : {
+        fontSize: '13px',
+        margin : '20px auto 10px auto',
+        color:'#757575'
+    }
 })
 
 class home extends Component {
@@ -34,7 +45,7 @@ class home extends Component {
     showTodos(){
         
         const {classes } = this.props  
-        const { currMonth , toggleStatusFilter } = this.props.UI
+        const { currMonth , statusFilter, labelFilter, today } = this.props.UI
         const {todos} = this.props.data
 
         const monthBack = subMonths(currMonth , 1) //one month back, wrt todays date
@@ -47,17 +58,23 @@ class home extends Component {
             let y = getYear(day)
             let mon = format(day, 'MMM')
             let dayOfWeek = format(day, 'EEE')
+            let yesterday = subDays(today , 1)
+            let isToday = d === getDate(today) & m === getMonth(today) & y === getYear(today) ? true : false
+            let isYesterday = d === getDate(yesterday) & m === getMonth(yesterday) & y === getYear(yesterday) ? true : false
 
             let dateWiseTodo = todos.filter( (todo) => {
                 let createdAtd = getDate(parseISO(todo.createdAt))
                 let createdAtm = getMonth(parseISO(todo.createdAt))
                 let createdAty = getYear(parseISO(todo.createdAt))
-                return toggleStatusFilter === 'none' ? d === createdAtd & m === createdAtm & y === createdAty :  
-                d === createdAtd & m === createdAtm & y === createdAty & todo.status === toggleStatusFilter
+                return statusFilter === 'none' & labelFilter === 'none' ? d === createdAtd & m === createdAtm & y === createdAty :  statusFilter !== 'none' & labelFilter === 'none' ? 
+                d === createdAtd & m === createdAtm & y === createdAty & todo.status === statusFilter : statusFilter === 'none' & labelFilter !== 'none' ? d === createdAtd & m === createdAtm & y === createdAty & todo.label === labelFilter :
+                d === createdAtd & m === createdAtm & y === createdAty & todo.status === statusFilter & todo.label === labelFilter
             })
 
             rows.push(
-                dateWiseTodo.length === 0 ? '' : (<div style={{fontSize: '13px', margin : '20px auto 10px auto'}}>{dayOfWeek}, {mon} {d}</div>)
+                dateWiseTodo.length === 0 ? '' : isToday ? (<div className={classes.dates}><b style={{fontSize: '15px', color : '#424242', marginRight: '5px'}}>Today</b> {dayOfWeek}, {mon} {d}</div>) : 
+                isYesterday ? (<div className={classes.dates}><b style={{fontSize: '15px', color : '#616161', marginRight: '5px'}}>Yesterday</b>  {dayOfWeek}, {mon} {d}</div>) : 
+                (<div className={classes.dates}>{dayOfWeek}, {mon} {d}</div>)
             )
             rows.push(
                 dateWiseTodo.map(todo => <TodoItem key={todo.todoId} todo = {todo}/>)
@@ -73,13 +90,18 @@ class home extends Component {
     }
 
     render() {
+        const { classes} = this.props
         return (
             <Fragment>
                 <Grid container spacing={5}>
-                    <Grid item xs={8} style={{borderRight : '1px solid #9e9e9e'}}>
+                    <Grid item sm={8} style={{borderRight : '1px solid #9e9e9e'}}>
+                        <div className={classes.postTodo}>
+                        <PostTodo style={{marginTop:"0px"}}/> <span style={{fontSize:"15px"}}>Add task</span>
+                        </div>
+                        
                         {this.showTodos()}
                     </Grid>
-                    <Grid item xs={4}>
+                    <Grid item sm={4}>
                         <Filters />
                     </Grid>
                 </Grid>
