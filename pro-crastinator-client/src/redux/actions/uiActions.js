@@ -1,4 +1,4 @@
-import {SET_PREV_MONTH, SET_NEXT_MONTH, SELECT_DATE, SET_STATUS_FILTER,SET_LABEL_FILTER,SET_cool } from '../types'
+import {SET_PREV_MONTH, SET_NEXT_MONTH, SELECT_DATE, SET_STATUS_FILTER,SET_LABEL_FILTER } from '../types'
 
 
 export const getPrevMonth = () => (dispatch) => {

@@ -117,6 +117,9 @@ export class CalendarCellFrame extends Component {
                 let d = getDate(day)
                 let m = getMonth(day)
                 let y = getYear(day)
+                let mon = format(day, 'MMM')
+                let weekday = format(day, 'EEE')
+                
                 let todayD = getDate(today)
                 let todayM = getMonth(today)
                 let todayY = getYear(today)
@@ -164,7 +167,7 @@ export class CalendarCellFrame extends Component {
                     //         </div>
                     //     </Paper>    
                     // </Grid>
-                    <CalendarDayCell d={d} m={m} y={y} dayGreaterThanToday ={dayGreaterThanToday} dayIsNotInCurrentMonth={dayIsNotInCurrentMonth} isToday={isToday} day={day} />
+                    <CalendarDayCell d={d} m={m} y={y} mon={mon} weekday={weekday} dayGreaterThanToday ={dayGreaterThanToday} dayIsNotInCurrentMonth={dayIsNotInCurrentMonth} isToday={isToday} day={day} />
                 )
                 day = addDays(day ,1)
             }
@@ -183,7 +186,6 @@ export class CalendarCellFrame extends Component {
 
     render() {
         const {todos} = this.props.data
-        console.log(todos[0] ? parseISO(todos[0].createdAt )  : "naahh")
 
         return (
             <div>

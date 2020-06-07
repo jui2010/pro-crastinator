@@ -10,6 +10,7 @@ import logo from '../images/logo.png'
 
 import {connect} from 'react-redux'
 
+import AppIcon from '@material-ui/icons/Subject'
 import PostTodo from './PostTodo'
 import SimpleMenu from './SimpleMenu'
 import EventAvailableIcon from '@material-ui/icons/EventAvailable'
@@ -52,6 +53,12 @@ const styles = (theme) => ({
     },
     postTodo : {
         margin : '0px auto auto auto'
+    },
+    appIconDiv : {
+        display : 'flex',
+        flexDirection : 'column',
+        color : 'white',
+        textTransform : 'capitalize'
     }
 })
 
@@ -79,14 +86,22 @@ class NavBar extends Component {
                 <AppBar position="static" className={classes.appBar}>
                     <Toolbar className = {classes.toolBar}>
                         {authenticated ? (<Fragment>
-                            <a href="/" className={classes.logoAuth}><img className={classes.logo} src={logo} alt='procrastinator'/></a>
+                            {/* <a href="/" className={classes.logoAuth}><img className={classes.logo} src={logo} alt='procrastinator'/></a> */}
+                            <Button className={classes.logoAuth} color="secondary" component = {Link} to="/" >
+                                <AppIcon className={classes.logo}/>
+                                {/* <div className={classes.appIconDiv}>
+                                    <div>Pro</div>
+                                    <div>Crastinator</div>
+                                </div> */}
+                            </Button>
                             <Button className={classes.button} color="secondary" component = {Link} to="/home" ><HomeIcon/></Button>
                             <Button className={classes.button} color="secondary" component = {Link} to="/month-view" ><EventAvailableIcon/></Button>
                             <a href="/profile" className={classes.profileA} ><img className={classes.profileImage} src={profileImage} alt='procrastinator'/></a>
                             <Button className={classes.button} color="secondary" ><SimpleMenu/></Button>
                         </Fragment>) : (
                         <Fragment>
-                            <a href="/" className={classes.logoNotAuth}><img className={classes.logo} src={logo} alt='procrastinator'/></a>
+                            {/* <a href="/" className={classes.logoNotAuth}><img className={classes.logo} src={logo} alt='procrastinator'/></a> */}
+                            <Button className={classes.logoNotAuth} color="secondary" component = {Link} to="/" ><AppIcon className={classes.logo}/></Button>
                             <Button className={classes.button} color="inherit" component = {Link} to="/login" >Login</Button>
                             <Button className={classes.button} color="inherit" component = {Link} to="/signup" >Signup</Button>
                         </Fragment>

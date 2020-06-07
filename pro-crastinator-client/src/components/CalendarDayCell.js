@@ -1,15 +1,15 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import Grid from '@material-ui/core/Grid'
 import Paper from '@material-ui/core/Paper'
 import format from "date-fns/format"
 
 import withStyles from '@material-ui/core/styles/withStyles'
-import addDays from 'date-fns/addDays'
+// import addDays from 'date-fns/addDays'
 
-import startOfMonth from 'date-fns/startOfMonth'
-import endOfMonth from 'date-fns/endOfMonth'
-import startOfWeek from 'date-fns/startOfWeek'
-import endOfWeek from 'date-fns/endOfWeek'
+// import startOfMonth from 'date-fns/startOfMonth'
+// import endOfMonth from 'date-fns/endOfMonth'
+// import startOfWeek from 'date-fns/startOfWeek'
+// import endOfWeek from 'date-fns/endOfWeek'
 //import differenceInCalendarDays from 'date-fns/differenceInCalendarDays'
 import parseISO from 'date-fns/parseISO'
 //import formatISO from 'date-fns/formatISO'
@@ -19,6 +19,15 @@ import getMonth from 'date-fns/getMonth'
 import getYear from 'date-fns/getYear'
 
 import {connect} from 'react-redux'
+
+import Button from '@material-ui/core/Button'
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogContentText from '@material-ui/core/DialogContentText'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import Typography from '@material-ui/core/Typography'
+
 import LabelImportantIcon from '@material-ui/icons/LabelImportant'
 import PermContactCalendarIcon from '@material-ui/icons/PermContactCalendar'
 import WorkIcon from '@material-ui/icons/Work'
@@ -83,7 +92,9 @@ export class CalendarDayCell extends Component {
         officeHovered : false,
         personalHovered : false,
         shoppingHovered : false,
-        generalHovered : false
+        generalHovered : false,
+        dialogOpen : false,
+        dialogLabel : ''
     }
 
     handleMouseHover = () => {
@@ -118,20 +129,67 @@ export class CalendarDayCell extends Component {
             generalHovered : true
         })
     }
+
+    handleDialogOpen = (label,day) => {
+        this.setState({
+            dialogOpen : true,
+            dialogLabel : label
+        })
+    }
+    handleDialogClose = () => {
+        this.setState({
+            dialogOpen : false
+        })
+    }
+
+    renderDialog(todoArray,weekday, d, mon){
+        return (
+        <Dialog
+        open={this.state.dialogOpen}
+        onClose={this.handleDialogClose}
+        // scroll={scroll}
+        aria-labelledby="scroll-dialog-title"
+        aria-describedby="scroll-dialog-description"
+        >
+            <DialogTitle id="scroll-dialog-title">{this.state.dialogLabel} tasks on {weekday}, {mon} {d}</DialogTitle>
+            <DialogContent dividers={true}>
+                {todoArray.map(todo => {
+                    return <DialogContentText
+                    id="scroll-dialog-description"
+                    tabIndex={-1}
+                >{todo.description}{console.log(todo.description)}</DialogContentText>
+                })} 
+            </DialogContent>
+            <DialogActions>
+            {/* <Button onClick={this.handleDialogClose} color="primary">
+                Cancel
+            </Button> */}
+            </DialogActions>
+        </Dialog>
+        )
+    }
     render() {
         const {todos} = this.props.data
-        const {classes, d,m,y,dayGreaterThanToday,dayIsNotInCurrentMonth,isToday,day} = this.props
+        const {classes, d,m,y,mon,weekday,dayGreaterThanToday,dayIsNotInCurrentMonth,isToday,day} = this.props
         let generalCount = 0
         let officeCount = 0
         let personalCount = 0
         let shoppingCount = 0
+
+        let generalTodoArray = []
+        let officeTodoArray = []
+        let personalTodoArray = []
+        let shoppingTodoArray = []
+
         return (
-            <Grid itemkey={y-m-d} onMouseEnter={this.handleMouseHover} onMouseLeave={this.handleMouseNoHover}>
+            <Fragment>
+                 
+                <Grid itemkey={y-m-d} onMouseEnter={this.handleMouseHover} onMouseLeave={this.handleMouseNoHover}>
                 <Paper elevation={3} className={classes.day} 
                 style={{backgroundColor : dayIsNotInCurrentMonth ? '#f7f7f7' : 'white'}}>
                     <div className={classes.dayTopFrame} > 
-                        <div className={classes.dayDiv} style={{color : isToday & !dayIsNotInCurrentMonth ? '#e64a19': dayIsNotInCurrentMonth ? '#e0e0e0' : 'black' }}>
-                            <b>{format(day, 'd')}</b>
+                        <div className={classes.dayDiv} style={{color : isToday & !dayIsNotInCurrentMonth ? 'white': dayIsNotInCurrentMonth ? '#e0e0e0' : 'black' }}>
+                            <div style={{backgroundColor: isToday & !dayIsNotInCurrentMonth ? '#d84315' : '', borderRadius: isToday & !dayIsNotInCurrentMonth ? '50%' : '', padding : '0px 6px'}}><b>{format(day, 'd')}</b></div>
                         </div>
                         <div className={classes.postTodo} >
                             {this.state.isHovering & dayGreaterThanToday & !dayIsNotInCurrentMonth? <PostTodo /> : ''}
@@ -139,49 +197,62 @@ export class CalendarDayCell extends Component {
                     </div>
                     <div>
                         {
-                        todos.map(({ createdAt, label}) => {
+                        todos.map(({ description, status, createdAt, label}) => {
                             let createdAtd = getDate(parseISO(createdAt))
                             let createdAtm = getMonth(parseISO(createdAt))
                             let createdAty = getYear(parseISO(createdAt))
-                            if(d === createdAtd & m === createdAtm & y === createdAty & label === "general"){
-                                generalCount = generalCount +1
-                            }
                             if(d === createdAtd & m === createdAtm & y === createdAty & label === "office"){
                                 officeCount = officeCount +1
+                                officeTodoArray.push({ description, status})
                             }
                             if(d === createdAtd & m === createdAtm & y === createdAty & label === "personal"){
                                 personalCount = personalCount +1
+                                personalTodoArray.push({ description, status})
                             }
                             if(d === createdAtd & m === createdAtm & y === createdAty & label === "shopping"){
                                 shoppingCount = shoppingCount +1
+                                shoppingTodoArray.push({ description, status})
+                            }
+                            if(d === createdAtd & m === createdAtm & y === createdAty & label === "general"){
+                                generalCount = generalCount +1
+                                generalTodoArray.push({ description, status})
                             }
                             return <div></div>
                         }) 
                         }
 
                         {!dayIsNotInCurrentMonth ? officeCount === 0 ? <div></div> : 
-                        <div className={classes.label} style={{backgroundColor : this.state.officeHovered ? '#f8bbd0' : ''}}>
-                            <WorkIcon className={classes.labelIcon} style={{color : this.state.officeHovered ? '': '#f8bbd0'}} onMouseEnter={this.handleOfficeHovered}/>+{officeCount} {officeCount === 1 ? 'task ' : 'tasks'} &nbsp;
+                        <div className={classes.label} style={{backgroundColor : this.state.officeHovered ? '#f8bbd0' : ''}} 
+                        onClick={() => this.handleDialogOpen('office')} >
+                            <WorkIcon className={classes.labelIcon} style={{color : this.state.officeHovered ? '': '#f8bbd0'}} 
+                            onMouseEnter={this.handleOfficeHovered}/>
+                            +{officeCount} {officeCount === 1 ? 'task ' : 'tasks'} &nbsp;
                         </div> : <div></div>}
     
                         {!dayIsNotInCurrentMonth ? personalCount === 0 ? <div></div> : 
-                        <div className={classes.label} style={{backgroundColor : this.state.personalHovered ? '#c5cae9' : ''}}>
+                        <div className={classes.label} style={{backgroundColor : this.state.personalHovered ? '#c5cae9' : ''}}
+                        onClick={() => this.handleDialogOpen('personal')}  >
                             <PermContactCalendarIcon className={classes.labelIcon} style={{color : this.state.personalHovered ? '': '#c5cae9'}} onMouseEnter={this.handlePersonalHovered}/>+{personalCount} {personalCount === 1 ? 'task ' : 'tasks'} &nbsp;
                         </div> : <div></div>}
                         
                         {!dayIsNotInCurrentMonth ? shoppingCount === 0 ? <div></div> : 
-                        <div className={classes.label} style={{backgroundColor : this.state.shoppingHovered ? '#b2dfdb' : ''}}>
+                        <div className={classes.label} style={{backgroundColor : this.state.shoppingHovered ? '#b2dfdb' : ''}}
+                        onClick={() => this.handleDialogOpen('shopping')} >
                             <ShoppingCartIcon className={classes.labelIcon} style={{color : this.state.shoppingHovered ? '': '#b2dfdb'}} onMouseEnter={this.handleShoppingHovered}/>+{shoppingCount} {shoppingCount === 1 ? 'task ' : 'tasks'} &nbsp;
                         </div> : <div></div>}
                         
                         {!dayIsNotInCurrentMonth ? generalCount === 0 ? <div></div> :
-                        <div className={classes.label} style={{backgroundColor : this.state.generalHovered ? '#bbdefb' : ''}}>
+                        <div className={classes.label} style={{backgroundColor : this.state.generalHovered ? '#bbdefb' : ''}}
+                        onClick={() => this.handleDialogOpen('general')} >
                              <CheckCircleIcon className={classes.labelIcon} style={{color : this.state.generalHovered ? '': '#bbdefb'}} onMouseEnter={this.handleGeneralHovered}/>+{generalCount} {generalCount === 1 ? 'task ' : 'tasks'} &nbsp;
                         </div> : <div></div>}
-                        
                     </div>
                 </Paper>    
             </Grid>
+            
+            {this.state.dialogLabel === 'general' ? this.renderDialog(generalTodoArray,weekday, d, mon) : this.state.dialogLabel === 'office' ? this.renderDialog(officeTodoArray, weekday,d, mon) :
+             this.state.dialogLabel === 'shopping' ? this.renderDialog(personalTodoArray, weekday,d, mon) : this.renderDialog(personalTodoArray, weekday,d, mon)}
+            </Fragment>
         )
     }
 }
