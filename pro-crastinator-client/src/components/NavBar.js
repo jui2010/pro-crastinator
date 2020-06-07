@@ -1,17 +1,13 @@
 import React, { Component, Fragment } from 'react'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
-//import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button'
-//import IconButton from '@material-ui/core/IconButton';
 import withStyles from '@material-ui/core/styles/withStyles'
 import { Link } from 'react-router-dom'
-import logo from '../images/logo.png'
 
 import {connect} from 'react-redux'
 
 import AppIcon from '@material-ui/icons/Subject'
-import PostTodo from './PostTodo'
 import SimpleMenu from './SimpleMenu'
 import EventAvailableIcon from '@material-ui/icons/EventAvailable'
 import HomeIcon from '@material-ui/icons/Home'
@@ -39,26 +35,27 @@ const styles = (theme) => ({
         borderRadius: '50%'
     },
     logoAuth : {
-        margin : 'auto 850px 23px auto'
+        margin : 'auto 900px 23px auto'
     },
     logoNotAuth : {
-        margin : 'auto 930px 23px auto'
+        margin : 'auto 1120px 23px auto'
     },
     profileA : {
         margin : 'auto auto 23px auto'
     },
     button : {
         marginBottom : '27px',
-        marginLeft : ' 0px'
+        marginLeft : ' 0px',
+        fontFamily: 'Bebas Neue',
+        fontSize : '25px'
     },
     postTodo : {
         margin : '0px auto auto auto'
     },
     appIconDiv : {
-        display : 'flex',
-        flexDirection : 'column',
+        fontSize : '20px',
         color : 'white',
-        textTransform : 'capitalize'
+        fontFamily: 'Bebas Neue',
     }
 })
 
@@ -85,14 +82,13 @@ class NavBar extends Component {
             <div className={classes.navBar}> 
                 <AppBar position="static" className={classes.appBar}>
                     <Toolbar className = {classes.toolBar}>
-                        {authenticated ? (<Fragment>
-                            {/* <a href="/" className={classes.logoAuth}><img className={classes.logo} src={logo} alt='procrastinator'/></a> */}
+                        {authenticated ? (
+                        <Fragment>
                             <Button className={classes.logoAuth} color="secondary" component = {Link} to="/" >
                                 <AppIcon className={classes.logo}/>
-                                {/* <div className={classes.appIconDiv}>
-                                    <div>Pro</div>
-                                    <div>Crastinator</div>
-                                </div> */}
+                                <div className={classes.appIconDiv}>
+                                    <div>Pro/Crastinator</div>
+                                </div>
                             </Button>
                             <Button className={classes.button} color="secondary" component = {Link} to="/home" ><HomeIcon/></Button>
                             <Button className={classes.button} color="secondary" component = {Link} to="/month-view" ><EventAvailableIcon/></Button>
@@ -100,10 +96,9 @@ class NavBar extends Component {
                             <Button className={classes.button} color="secondary" ><SimpleMenu/></Button>
                         </Fragment>) : (
                         <Fragment>
-                            {/* <a href="/" className={classes.logoNotAuth}><img className={classes.logo} src={logo} alt='procrastinator'/></a> */}
                             <Button className={classes.logoNotAuth} color="secondary" component = {Link} to="/" ><AppIcon className={classes.logo}/></Button>
-                            <Button className={classes.button} color="inherit" component = {Link} to="/login" >Login</Button>
-                            <Button className={classes.button} color="inherit" component = {Link} to="/signup" >Signup</Button>
+                            <Button className={classes.button} color="secondary" component = {Link} to="/login" >Login</Button>
+                            <Button className={classes.button} color="secondary" component = {Link} to="/signup" >Signup</Button>
                         </Fragment>
                         )}
                     </Toolbar>

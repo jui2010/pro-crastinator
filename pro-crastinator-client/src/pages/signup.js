@@ -16,13 +16,25 @@ const styles = (theme) => ({
     ...theme.spread,
     pageTitle : {
         margin : '20px 0px 20px auto' ,
+        fontFamily: 'Bebas Neue',
+        fontSize : '30px'
     },
     form : {
         textAlign : 'center'
+    },
+    button : {
+        fontFamily: 'Bebas Neue',
+        fontSize : '20px',
+        marginTop : '15px',
+        marginBottom : '5px'
+    },
+    textField : {
+        marginBottom : '10px',
     }
 })
 
 class signup extends Component {
+
     constructor(){
         super()
         this.state = {
@@ -32,6 +44,7 @@ class signup extends Component {
             username : ''           
         }
     }
+
     handleSubmit = (event) => {
         event.preventDefault()
         const newUser = {
@@ -44,12 +57,12 @@ class signup extends Component {
         this.props.signupUser(newUser , this.props.history)
     }
 
-
     handleChange = (event) => {
         this.setState({
             [event.target.name] : event.target.value
         })
     }
+    
     render() {
         const { classes } = this.props
 
@@ -60,7 +73,7 @@ class signup extends Component {
                     <Typography variant="h4" className={classes.pageTitle}>
                         Sign Up
                     </Typography>
-                    <form noValidate onSubmit ={this.handleSubmit }>
+                    <form noValidate onSubmit ={this.handleSubmit } >
 
                         <TextField 
                         id ="email" 
@@ -68,7 +81,7 @@ class signup extends Component {
                         type="email" 
                         label="Email" 
                         className={classes.textField}
-                      
+                        variant="outlined"
                         value={this.state.email} 
                         onChange= {this.handleChange} fullWidth />
 
@@ -78,6 +91,7 @@ class signup extends Component {
                         type="password" 
                         label="Password" 
                         className={classes.textField}
+                        variant="outlined"
                         value={this.state.password} 
                         onChange= {this.handleChange} fullWidth />
 
@@ -87,6 +101,7 @@ class signup extends Component {
                         type="password" 
                         label="Confirm Password" 
                         className={classes.textField}
+                        variant="outlined"
                         value={this.state.confirmPassword} 
                         onChange= {this.handleChange} fullWidth />
                         
@@ -95,15 +110,16 @@ class signup extends Component {
                         name="username" 
                         type="text" 
                         label="Username" 
+                        variant="outlined"
                         className={classes.textField}
                         value={this.state.username} 
                         onChange= {this.handleChange} fullWidth />
 
                         <Button type="submit" variant="contained" color="primary" className={classes.button}>
-                            Sign Up
+                            Confirm
                         </Button>
                         <br />
-                        <small>Already have an account ? Login up <Link to="/login" >here</Link></small>
+                        <small>Already have an account ? Login <Link to="/login" >here</Link></small>
                     </form>
                 </Grid> 
                 <Grid item={true} sm /> 

@@ -6,23 +6,33 @@ import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
 import TextField from '@material-ui/core/TextField'
-//import CircularProgress from '@material-ui/core/CircularProgress'
 
 import {connect} from 'react-redux'
 import {loginUser} from '../redux/actions/userActions'
 
-//we get theme from MuiThemeProvider in the App.js
 const styles = (theme) => ({
     ...theme.spread,
     pageTitle : {
         margin : '20px 0px 20px auto' ,
+        fontFamily: 'Bebas Neue',
+        fontSize : '30px'
     },
     form : {
         textAlign : 'center'
+    },
+    button : {
+        fontFamily: 'Bebas Neue',
+        fontSize : '20px',
+        marginTop : '15px',
+        marginBottom : '5px'
+    },
+    textField : {
+        marginBottom : '10px',
     }
 })
 
 class login extends Component {
+
     constructor(){
         super()
         this.state = {
@@ -30,6 +40,7 @@ class login extends Component {
             password : ''     
         }
     }
+
     handleSubmit = (event) => {
         event.preventDefault()
         const newUser = {
@@ -38,7 +49,6 @@ class login extends Component {
         }
         this.props.loginUser(newUser , this.props.history)
     }
-
 
     handleChange = (event) => {
         this.setState({
@@ -63,7 +73,7 @@ class login extends Component {
                         type="email" 
                         label="Email" 
                         className={classes.textField}
-                      
+                        variant="outlined"
                         value={this.state.email} 
                         onChange= {this.handleChange} fullWidth />
 
@@ -73,14 +83,15 @@ class login extends Component {
                         type="password" 
                         label="Password" 
                         className={classes.textField}
+                        variant="outlined"
                         value={this.state.password} 
                         onChange= {this.handleChange} fullWidth />
 
                         <Button type="submit" variant="contained" color="primary" className={classes.button}>
-                            Login
+                            Confirm
                         </Button>
                         <br />
-                        <small>Dont have an account ? Sign up <Link to="/signup" >here</Link></small>
+                        <small>Don't have an account ? Sign up <Link to="/signup" >here</Link></small>
                     </form>
                 </Grid> 
                 <Grid item={true} sm /> 

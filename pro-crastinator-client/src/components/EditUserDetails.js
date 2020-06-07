@@ -1,6 +1,4 @@
 import React, { Component, Fragment } from 'react'
-import EditIcon from '@material-ui/icons/Edit'
-import MyButton from './MyButton'
 import withStyles from '@material-ui/core/styles/withStyles'
 
 import Button from '@material-ui/core/Button'
@@ -75,15 +73,26 @@ class EditUserDetails extends Component {
                 </div>
                 
                 <Dialog open={this.state.open} onClose={this.handleClose}>
-                    <DialogTitle>Edit user details</DialogTitle>
-                    <form onSubmit={this.handleSubmit}>
-                        <TextField name="firstName" id="firstName" label="First Name" type="text" onChange={this.handleChange} value={this.state.firstName} fullWidth />
-                        <TextField name="lastName" id="lastName" label="Last Name" type="text" onChange={this.handleChange} value={this.state.lastName} fullWidth />
-                        <TextField name="location" id="location" label="Location" type="text" onChange={this.handleChange} value={this.state.location} fullWidth />
-                        <TextField name="bio" id="bio" label="Bio" type="text" onChange={this.handleChange} value={this.state.bio} fullWidth />
-                        <Button type="submit" variant="contained" color="primary">
+                    <DialogTitle><div style={{fontFamily: 'Bebas Neue'}}>Edit user details</div></DialogTitle>
+                    <form onSubmit={this.handleSubmit} style={{margin : 'auto 15px'}}>
+
+                        <TextField name="firstName" id="firstName" label="First Name" type="text" onChange={this.handleChange}
+                            style={{marginBottom: '10px'}} value={this.state.firstName} variant="outlined" fullWidth />
+                        
+                        <TextField name="lastName" id="lastName" label="Last Name" type="text" onChange={this.handleChange}
+                            style={{marginBottom: '10px'}} value={this.state.lastName} variant="outlined" fullWidth />
+                        
+                        <TextField name="location" id="location" label="Location" type="text" onChange={this.handleChange} 
+                            style={{marginBottom: '10px'}} value={this.state.location} variant="outlined" fullWidth />
+
+                        <TextField name="bio" id="bio" label="Bio" type="text" onChange={this.handleChange} 
+                            style={{marginBottom: '10px'}} value={this.state.bio} variant="outlined" fullWidth />
+
+                        <Button type="submit" variant="contained" color="primary"
+                            style={{fontFamily: 'Bebas Neue', margin : '10px 5px', fontSize : '16px'}}>
                             Submit
                         </Button>
+
                     </form>
                 </Dialog>
             </Fragment>

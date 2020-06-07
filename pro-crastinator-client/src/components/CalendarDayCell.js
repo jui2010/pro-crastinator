@@ -4,35 +4,24 @@ import Paper from '@material-ui/core/Paper'
 import format from "date-fns/format"
 
 import withStyles from '@material-ui/core/styles/withStyles'
-// import addDays from 'date-fns/addDays'
 
-// import startOfMonth from 'date-fns/startOfMonth'
-// import endOfMonth from 'date-fns/endOfMonth'
-// import startOfWeek from 'date-fns/startOfWeek'
-// import endOfWeek from 'date-fns/endOfWeek'
-//import differenceInCalendarDays from 'date-fns/differenceInCalendarDays'
 import parseISO from 'date-fns/parseISO'
-//import formatISO from 'date-fns/formatISO'
-
 import getDate from 'date-fns/getDate'
 import getMonth from 'date-fns/getMonth'
 import getYear from 'date-fns/getYear'
 
 import {connect} from 'react-redux'
 
-import Button from '@material-ui/core/Button'
 import Dialog from '@material-ui/core/Dialog'
 import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
-import Typography from '@material-ui/core/Typography'
 
-import LabelImportantIcon from '@material-ui/icons/LabelImportant'
 import PermContactCalendarIcon from '@material-ui/icons/PermContactCalendar'
 import WorkIcon from '@material-ui/icons/Work'
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
-import CheckCircleIcon from '@material-ui/icons/CheckCircle'
+import GeneralIcon from '@material-ui/icons/Assignment'
 import PostTodo from './PostTodo'
 
 const styles = (theme) => ({
@@ -189,10 +178,10 @@ export class CalendarDayCell extends Component {
                 style={{backgroundColor : dayIsNotInCurrentMonth ? '#f7f7f7' : 'white'}}>
                     <div className={classes.dayTopFrame} > 
                         <div className={classes.dayDiv} style={{color : isToday & !dayIsNotInCurrentMonth ? 'white': dayIsNotInCurrentMonth ? '#e0e0e0' : 'black' }}>
-                            <div style={{backgroundColor: isToday & !dayIsNotInCurrentMonth ? '#d84315' : '', borderRadius: isToday & !dayIsNotInCurrentMonth ? '50%' : '', padding : '0px 6px'}}><b>{format(day, 'd')}</b></div>
+                            <div style={{backgroundColor: isToday & !dayIsNotInCurrentMonth ? '#484848' : '', borderRadius: isToday & !dayIsNotInCurrentMonth ? '50%' : '', padding : '0px 7px'}}><b>{format(day, 'd')}</b></div>
                         </div>
                         <div className={classes.postTodo} >
-                            {this.state.isHovering & dayGreaterThanToday & !dayIsNotInCurrentMonth? <PostTodo /> : ''}
+                            {this.state.isHovering & dayGreaterThanToday & !dayIsNotInCurrentMonth? <PostTodo day={day} /> : ''}
                         </div>
                     </div>
                     <div>
@@ -244,7 +233,7 @@ export class CalendarDayCell extends Component {
                         {!dayIsNotInCurrentMonth ? generalCount === 0 ? <div></div> :
                         <div className={classes.label} style={{backgroundColor : this.state.generalHovered ? '#bbdefb' : ''}}
                         onClick={() => this.handleDialogOpen('general')} >
-                             <CheckCircleIcon className={classes.labelIcon} style={{color : this.state.generalHovered ? '': '#bbdefb'}} onMouseEnter={this.handleGeneralHovered}/>+{generalCount} {generalCount === 1 ? 'task ' : 'tasks'} &nbsp;
+                             <GeneralIcon className={classes.labelIcon} style={{color : this.state.generalHovered ? '': '#bbdefb'}} onMouseEnter={this.handleGeneralHovered}/>+{generalCount} {generalCount === 1 ? 'task ' : 'tasks'} &nbsp;
                         </div> : <div></div>}
                     </div>
                 </Paper>    

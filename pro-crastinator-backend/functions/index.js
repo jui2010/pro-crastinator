@@ -101,7 +101,7 @@ app.get('/getAuthenticatedUserDataAndTodos', FBAuth, (req, res) => {
         .then(doc => {
             if(doc.exists){
                 userData.userInfo = doc.data()
-                return db.collection('todos').where('username' , '==', req.user.username).get()
+                return db.collection('todos').where('username' , '==', req.user.username).orderBy('createdAt', 'desc').get()
             }
         })
         .then(data => {
@@ -130,7 +130,7 @@ app.post('/postTodo', FBAuth, (req, res) => {
         username : req.user.username,
         status : 'new',
         dueAt : req.body.dueAt,
-        createdAt :  new Date().toISOString()
+        createdAt : req.body.createdAt,
     }
     db.collection('todos')
         .add(newTodo)

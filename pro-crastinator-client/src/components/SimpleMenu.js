@@ -4,6 +4,8 @@ import MenuItem from '@material-ui/core/MenuItem'
 import IconButton from '@material-ui/core/IconButton'
 import SettingsIcon from '@material-ui/icons/Settings'
 
+import { Link } from 'react-router-dom'
+
 import withStyles from '@material-ui/core/styles/withStyles'
 
 import {connect} from 'react-redux'
@@ -64,8 +66,7 @@ class SimpleMenu extends Component{
         open={Boolean(this.state.anchorEl)}
         onClose={this.handleClose}
       >
-        <MenuItem onClick={this.handleClose}>Profile</MenuItem>
-        <MenuItem onClick={this.handleClose}>My account</MenuItem>
+        <MenuItem component = {Link} to="/profile" >Profile</MenuItem>
         <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
       </Menu>
     </div>

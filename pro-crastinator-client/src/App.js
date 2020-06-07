@@ -13,10 +13,12 @@ import { ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles';
 //redux
 import {Provider} from 'react-redux'
 import store from './redux/store'
+import { SET_AUTHENTICATED } from './redux/types';
+import {getAuthenticatedUserDataAndTodos} from './redux/actions/dataActions'
+import {logoutUser} from './redux/actions/userActions'
 
 import jwtDecode from 'jwt-decode'
 
-import AuthorizedRoute from './components/AuthorizedRoute'
 //pages
 import signup from './pages/signup'
 import login from './pages/login'
@@ -27,14 +29,13 @@ import profile from './pages/profile'
 
 //component
 import NavBar from './components/NavBar'
-import { SET_AUTHENTICATED } from './redux/types';
-import {getAuthenticatedUserDataAndTodos} from './redux/actions/dataActions'
-import {logoutUser} from './redux/actions/userActions'
+import AuthorizedRoute from './components/AuthorizedRoute'
+
 import axios from 'axios';
 
 const theme = createMuiTheme(themeObject)
 
-//verify token
+//verify token, if token has not expired get the userdata and task info of that user
 const token = localStorage.FBIdToken
 if(token){
   const decodedToken = jwtDecode(token)
@@ -49,9 +50,6 @@ if(token){
 }
 
 class App extends Component {
-  state = {
-    
-  }
   render(){
     return (
       <MuiThemeProvider theme={theme}>

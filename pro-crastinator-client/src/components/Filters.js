@@ -2,14 +2,13 @@ import React, { Component } from 'react'
 import {connect} from 'react-redux'
 import withStyles from '@material-ui/core/styles/withStyles'
 
-import Button from '@material-ui/core/Button'
 import ExpansionPanel from '@material-ui/core/ExpansionPanel'
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary'
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails'
 import Typography from '@material-ui/core/Typography'
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from '@material-ui/core/Switch';
 import Chip from '@material-ui/core/Chip'
-import NotInterestedIcon from '@material-ui/icons/NotInterested'
 
 import {setStatusFilter, setLabelFilter} from '../redux/actions/uiActions'
 
@@ -23,7 +22,66 @@ const styles = (theme) => ({
     chip: {
         margin: theme.spacing(0.5),
     },
+    heading : {
+      fontFamily: 'Bebas Neue',
+      fontSize : '22px',
+      color : '#212121',
+      letteSpacing : '0.5px'
+    }
 })
+
+const IOSSwitch = withStyles((theme) => ({
+    root: {
+      width: 42,
+      height: 26,
+      padding: 0,
+      margin: theme.spacing(1),
+    },
+    switchBase: {
+      padding: 1,
+      '&$checked': {
+        transform: 'translateX(16px)',
+        color: theme.palette.common.white,
+        '& + $track': {
+          backgroundColor: '#61b460',
+          opacity: 1,
+          border: 'none',
+        },
+      },
+      '&$focusVisible $thumb': {
+        color: '#61b460',
+        border: '6px solid #fff',
+      },
+    },
+    thumb: {
+      width: 24,
+      height: 24,
+    },
+    track: {
+      borderRadius: 26 / 2,
+      border: `1px solid #81847a`,
+      backgroundColor: '#d3d8c6',
+      opacity: 1,
+      transition: theme.transitions.create(['background-color', 'border']),
+    },
+    checked: {},
+    focusVisible: {},
+  }))(({ classes, ...props }) => {
+    return (
+      <Switch
+        focusVisibleClassName={classes.focusVisible}
+        disableRipple
+        classes={{
+          root: classes.root,
+          switchBase: classes.switchBase,
+          thumb: classes.thumb,
+          track: classes.track,
+          checked: classes.checked,
+        }}
+        {...props}
+      />
+    );
+  });
 
 export class Filters extends Component {
 
@@ -31,12 +89,14 @@ export class Filters extends Component {
         statusFilter : 'none',
         labelFilter : 'none'
     }
+
     handleStatusFilter = (status) => {
         this.setState({
             statusFilter : status
         })
         this.props.setStatusFilter(status)
     }
+
     handleLabelFilter = (label) => {
         this.setState({
             labelFilter : label
@@ -50,27 +110,28 @@ export class Filters extends Component {
             <div>
                 <ExpansionPanel expanded={true}>
                     <ExpansionPanelSummary
-                    expandIcon={<ExpandMoreIcon />}
+                    expandIcon={<FormControlLabel
+                        control={<IOSSwitch  onChange={() => this.handleStatusFilter('none')}/>}
+                    />}
                     aria-controls="panel1a-content"
-                    id="panel1a-header"
-                    >
-                    <Typography className={classes.heading}><b>Status</b></Typography>
+                    id="panel1a-header">
+                        <Typography className={classes.heading} ><b>Status</b></Typography>
                     </ExpansionPanelSummary>
                     <ExpansionPanelDetails className={classes.statusBody}>
                         <Chip className={classes.chip} color={this.state.statusFilter === "complete" ? "primary" : ""} label="Complete" onClick = { () => this.handleStatusFilter('complete')}/>
                         <Chip className={classes.chip} color={this.state.statusFilter === "ongoing" ? "primary" : ""} label="On-going" onClick = { () => this.handleStatusFilter('ongoing')}/>
                         <Chip className={classes.chip} color={this.state.statusFilter === "new" ? "primary" : ""} label="New" onClick = { () => this.handleStatusFilter('new')}/>
-                        <Chip className={classes.chip} color={this.state.statusFilter === "none" ? "primary" : ""} icon={<NotInterestedIcon style={{marginLeft : '16px'}}/>} onClick = { () => this.handleStatusFilter('none')}/>
                     </ExpansionPanelDetails>
                 </ExpansionPanel>
 
-                <ExpansionPanel>
+                <ExpansionPanel expanded={true}>
                     <ExpansionPanelSummary
-                    expandIcon={<ExpandMoreIcon />}
+                    expandIcon={<FormControlLabel
+                        control={<IOSSwitch onChange={() => this.handleLabelFilter('none')}/>}
+                    />}
                     aria-controls="panel2a-content"
-                    id="panel2a-header"
-                    >
-                    <Typography className={classes.heading}><b>Labels</b></Typography>
+                    id="panel2a-header" >
+                        <Typography className={classes.heading}><b>Labels</b></Typography>
                     </ExpansionPanelSummary>
                     <ExpansionPanelDetails className={classes.statusBody}>
                         <Chip className={classes.chip} color={this.state.labelFilter === "personal" ? "primary" : "#c5cae9"} 
@@ -81,8 +142,6 @@ export class Filters extends Component {
                         label="Shopping" onClick = { () => this.handleLabelFilter('shopping')}/>
                         <Chip className={classes.chip} color={this.state.labelFilter === "general" ? "primary" : "#bbdefb"} 
                         label="General" onClick = { () => this.handleLabelFilter('general')}/>
-                        <Chip className={classes.chip} color={this.state.labelFilter === "none" ? "primary" : ""} 
-                        icon={<NotInterestedIcon style={{marginLeft : '16px'}}/>} onClick = { () => this.handleLabelFilter('none')}/>
                     </ExpansionPanelDetails>
                 </ExpansionPanel>
             </div>

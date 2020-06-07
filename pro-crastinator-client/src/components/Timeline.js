@@ -5,23 +5,29 @@ import format from "date-fns/format"
 import withStyles from '@material-ui/core/styles/withStyles'
 import addDays from 'date-fns/addDays'
 import subDays from 'date-fns/subDays'
-
-// import startOfMonth from 'date-fns/startOfMonth'
-// import endOfMonth from 'date-fns/endOfMonth'
 import startOfWeek from 'date-fns/startOfWeek'
 import endOfWeek from 'date-fns/endOfWeek'
 import differenceInCalendarDays from 'date-fns/differenceInCalendarDays'
 import parseISO from 'date-fns/parseISO'
-//import formatISO from 'date-fns/formatISO'
-
 import getDate from 'date-fns/getDate'
 import getMonth from 'date-fns/getMonth'
 import getYear from 'date-fns/getYear'
 
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import Collapse from '@material-ui/core/Collapse';
+import PermContactCalendarIcon from '@material-ui/icons/PermContactCalendar'
+import WorkIcon from '@material-ui/icons/Work'
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
+import GeneralIcon from '@material-ui/icons/Assignment'
+import ExpandLess from '@material-ui/icons/ExpandLess'
+import ExpandMore from '@material-ui/icons/ExpandMore'
+import StarBorder from '@material-ui/icons/StarBorder'
+
 import {connect} from 'react-redux'
 import {setSelectedDate} from '../redux/actions/uiActions'
-import LabelImportantIcon from '@material-ui/icons/LabelImportant'
-import LinearScaleIcon from '@material-ui/icons/LinearScale'
 
 
 const styles = (theme) => ({
@@ -35,12 +41,12 @@ const styles = (theme) => ({
     },
     taskDisplayDiv : {
         fontSize : '15px',
-        marginTop : '10px'
+        marginTop : '30px'
     },
     timelineMainDiv : {
         border : 'solid 1px #e0e0e0',
         fontSize : '11px',
-        backgroundColor : '#eeeeee'
+        backgroundColor : 'rgb(245,245,245)'
     },
     timelineDiv : {
         display : 'flex',
@@ -86,13 +92,45 @@ const styles = (theme) => ({
         height: theme.spacing(1.5),
         margin : '25px 1.6px 6px 1.6px',
         fontSize : '10px'
+    },
+    nested: {
+        paddingLeft: theme.spacing(4),
+        fontSize : '10px'
+    },
+    listItemText : {
+        color : '#424242'
     }
 })
 
 class Timeline extends Component {
 
     state = {
-        currMonth : new Date()
+        currMonth : new Date(),
+        openGeneralList : false,
+        openOfficeList : false,
+        openPersonalList : false,
+        openShoppingList : false
+    }
+
+    handleGeneralList = () => {
+        this.setState({
+            openGeneralList : !this.state.openGeneralList
+        })
+    }
+    handleOfficeList = () => {
+        this.setState({
+            openOfficeList : !this.state.openOfficeList
+        })
+    }
+    handlePersonalList = () => {
+        this.setState({
+            openPersonalList : !this.state.openPersonalList
+        })
+    }
+    handleShoppingList = () => {
+        this.setState({
+            openShoppingList : !this.state.openShoppingList
+        })
     }
 
     getCountOfCompletedTasksInOneDay(day){
@@ -263,9 +301,12 @@ class Timeline extends Component {
         let officeTasksOnSelectedDay = []
         let personalTasksOnSelectedDay = []
         let generalTasksOnSelectedDay = []
+        let shoppingTasksOnSelectedDay = []
+
         let officeCount = 0
         let personalCount = 0
         let generalCount = 0
+        let shoppingCount = 0
 
         todos.map(({todoId , description, createdAt, status, label}) => {
             let createdAtd = getDate(parseISO(createdAt))
@@ -276,59 +317,148 @@ class Timeline extends Component {
                 if(label === "personal"){
                     personalCount = personalCount + 1
                     personalTasksOnSelectedDay.push(
-                        <div key={todoId}><LinearScaleIcon style={{fontSize : '12px'}}/>{description}</div>
+                        // <div key={todoId}><LinearScaleIcon style={{fontSize : '12px'}}/>{description}</div>
+                        <Collapse in={this.state.openPersonalList} timeout="auto" unmountOnExit>
+                            <List component="div" disablePadding>
+                            <ListItem button className={classes.nested}>
+                                <ListItemIcon>
+                                <StarBorder />
+                                </ListItemIcon>
+                                <ListItemText primary={description} />
+                            </ListItem>
+                            </List>
+                        </Collapse>
                     )
                 }
                 if(label === "office"){
                     officeCount = officeCount + 1
                     officeTasksOnSelectedDay.push(
-                        <div key={todoId}><LinearScaleIcon style={{fontSize : '13px'}}/>{description}</div>
+                        // <div key={todoId}><LinearScaleIcon style={{fontSize : '13px'}}/>{description}</div>
+                        <Collapse in={this.state.openOfficeList} timeout="auto" unmountOnExit >
+                            <List component="div" disablePadding >
+                            <ListItem button className={classes.nested}>
+                                <ListItemIcon>
+                                <StarBorder />
+                                </ListItemIcon>
+                                <ListItemText primary={description}  />
+                            </ListItem>
+                            </List>
+                        </Collapse>
                     )
                 }
                 if(label === "general"){
                     generalCount = generalCount + 1
                     generalTasksOnSelectedDay.push(
-                        <div key={todoId} style={{ marginBottom:'10px'}}><LinearScaleIcon style={{fontSize : '13px', marginRight:'15px'}}/>{description}</div>
+                        // <div key={todoId} style={{ marginBottom:'10px'}}><LinearScaleIcon style={{fontSize : '13px', marginRight:'15px'}}/>{description}</div>
+                        
+                        <Collapse in={this.state.openGeneralList} timeout="auto" unmountOnExit>
+                            <List component="div" disablePadding>
+                            <ListItem button className={classes.nested}>
+                                <ListItemIcon>
+                                <StarBorder />
+                                </ListItemIcon>
+                                <ListItemText primary={description} />
+                            </ListItem>
+                            </List>
+                        </Collapse>
                     )
                 }
-                
+                if(label === "shopping"){
+                    shoppingCount = shoppingCount + 1
+                    shoppingTasksOnSelectedDay.push(
+                        // <div key={todoId} style={{ marginBottom:'10px'}}><LinearScaleIcon style={{fontSize : '13px', marginRight:'15px'}}/>{description}</div>
+                        
+                        <Collapse in={this.state.openShoppingList} timeout="auto" unmountOnExit>
+                            <List component="div" disablePadding>
+                            <ListItem button className={classes.nested}>
+                                <ListItemIcon>
+                                <StarBorder />
+                                </ListItemIcon>
+                                <ListItemText primary={description} />
+                            </ListItem>
+                            </List>
+                        </Collapse>
+                    )
+                }
             }
             return ''
         })
 
         let renderTask = (
-            <div>
+            <div >
                 <div>Tasks activity</div>
                 <div className="separator" style={{fontSize : '13px'}}>
                     {selectedDatemon + " " + selectedDated + ", " + selectedDatey }
                 </div>
-                <div style={{marginTop : '20px'}}>
-                    {personalTasksOnSelectedDay.length === 0 & officeTasksOnSelectedDay.length === 0 & 
-                    generalTasksOnSelectedDay.length === 0 ? "No tasks completion activity " : ""}
-                </div>
-                <div style={{marginTop : '20px'}}>
-                    {personalTasksOnSelectedDay.length === 0 ? '' :(
-                        <div style={{marginLeft : '15px'}}>
-                            <LabelImportantIcon style={{fontSize : '17px'}} />  Completed {personalCount} personal tasks
-                            <div style={{marginLeft : '15px'}}>{personalTasksOnSelectedDay}</div>
-                        </div>
-                    )}
-                </div>
-                <div style={{marginTop : '20px'}}>
-                    {officeTasksOnSelectedDay.length === 0 ? '' :(
-                        <div style={{marginLeft : '15px'}}>
-                            <LabelImportantIcon style={{fontSize : '17px'}}/>  Completed {officeCount} office tasks
-                            <div style={{marginLeft : '15px'}}>{officeTasksOnSelectedDay}</div>
-                        </div>
-                    )}
-                </div>
-                <div style={{marginTop : '20px'}}>
+                <div >
+                    <div style={{marginTop : '20px'}}>
+                        {personalTasksOnSelectedDay.length === 0 & officeTasksOnSelectedDay.length === 0 & 
+                        generalTasksOnSelectedDay.length === 0 ? "No tasks completion activity " : ""}
+                    </div>
+
+                    <div>
+                        {personalTasksOnSelectedDay.length === 0 ? '' :(
+                        <List
+                            component="nav"
+                            aria-labelledby="nested-list-subheader">
+                            <ListItem button onClick={this.handlePersonalList}>
+                                <ListItemIcon>
+                                    <PermContactCalendarIcon />
+                                </ListItemIcon>
+                                <ListItemText primary={"Personal Tasks ("+personalCount+")"} className={classes.listItemText}/>
+                                {this.state.openPersonalList ? <ExpandLess /> : <ExpandMore />}
+                            </ListItem>
+                            {personalTasksOnSelectedDay}
+                        </List>)}
+                    </div>
+
+                    <div >
+                        {officeTasksOnSelectedDay.length === 0 ? '' :(
+                        <List
+                            component="nav"
+                            aria-labelledby="nested-list-subheader">
+                            <ListItem button onClick={this.handleOfficeList}>
+                                <ListItemIcon>
+                                    <WorkIcon />
+                                </ListItemIcon>
+                                <ListItemText primary={"Office Tasks ("+officeCount+")"}  className={classes.listItemText}/>
+                                {this.state.openOfficeList ? <ExpandLess /> : <ExpandMore />}
+                            </ListItem>
+                            {officeTasksOnSelectedDay}
+                        </List>)}
+                    </div>
+
+                    <div >
                     {generalTasksOnSelectedDay.length === 0 ? '' :(
-                        <div style={{marginLeft : '15px'}}>
-                            <LabelImportantIcon style={{fontSize : '17px'}}/>  Completed {generalCount} general tasks
-                            <div style={{marginLeft : '15px'}}>{generalTasksOnSelectedDay}</div>
-                        </div>
-                    )}
+                    <List
+                        component="nav"
+                        aria-labelledby="nested-list-subheader">
+                        <ListItem button onClick={this.handleGeneralList}>
+                            <ListItemIcon>
+                                <GeneralIcon />
+                            </ListItemIcon>
+                            <ListItemText primary={"General Tasks ("+generalCount+")"}  className={classes.listItemText}/>
+                            {this.state.openGeneralList ? <ExpandLess /> : <ExpandMore />}
+                        </ListItem>
+                        {generalTasksOnSelectedDay}
+                    </List>)}
+                    </div>
+
+                    <div >
+                    {shoppingTasksOnSelectedDay.length === 0 ? '' :(
+                    <List
+                        component="nav"
+                        aria-labelledby="nested-list-subheader">
+                        <ListItem button onClick={this.handleShoppingList}>
+                            <ListItemIcon>
+                                <ShoppingCartIcon />
+                            </ListItemIcon>
+                            <ListItemText primary={"Shopping Tasks ("+shoppingCount+")"}  className={classes.listItemText}/>
+                            {this.state.openShoppingList ? <ExpandLess /> : <ExpandMore />}
+                        </ListItem>
+                        {shoppingTasksOnSelectedDay}
+                    </List>)}
+                    </div>
                 </div>
             </div>
             
@@ -351,8 +481,6 @@ class Timeline extends Component {
                     {renderTask}
                 </div>
             </div>
-            
-            
         )
     }
 }

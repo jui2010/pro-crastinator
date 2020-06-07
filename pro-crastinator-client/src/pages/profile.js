@@ -16,12 +16,15 @@ class profile extends Component {
         const {classes} = this.props
         return (
             <Grid container spacing={5} className={classes.mainGrid}>
+
                 <Grid item={true} sm={3} >
                     <UserProfile />
                 </Grid> 
+
                 <Grid item={true} sm={9} >
                     <Timeline />
                 </Grid>
+                
             </Grid>
         )
     }

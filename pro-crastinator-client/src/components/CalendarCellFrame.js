@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import Grid from '@material-ui/core/Grid'
-import Paper from '@material-ui/core/Paper'
 import format from "date-fns/format"
 
 import withStyles from '@material-ui/core/styles/withStyles'
@@ -11,16 +10,12 @@ import endOfMonth from 'date-fns/endOfMonth'
 import startOfWeek from 'date-fns/startOfWeek'
 import endOfWeek from 'date-fns/endOfWeek'
 import subDays from 'date-fns/subDays'
-import parseISO from 'date-fns/parseISO'
-//import formatISO from 'date-fns/formatISO'
 
 import getDate from 'date-fns/getDate'
 import getMonth from 'date-fns/getMonth'
 import getYear from 'date-fns/getYear'
 
 import {connect} from 'react-redux'
-import IconButton from '@material-ui/core/IconButton'
-import PostTodo from './PostTodo'
 import CalendarDayCell from './CalendarDayCell'
 
 const styles = (theme) => ({
@@ -100,7 +95,6 @@ export class CalendarCellFrame extends Component {
 
     showCells(){
         const { currMonth , today } = this.props.UI
-        // const {todos} = this.props.data
 
         const monthStart = startOfMonth(currMonth)
         const monthEnd = endOfMonth(monthStart)
@@ -124,49 +118,11 @@ export class CalendarCellFrame extends Component {
                 let todayM = getMonth(today)
                 let todayY = getYear(today)
                 let yesterday = subDays(today, 1)
-                // let generalCount = 0
-                // let officeCount = 0
-                // let personalCount = 0
+
                 let isToday = (d === todayD & m === todayM & y === todayY ) ? true : false
                 let dayIsNotInCurrentMonth = (day < monthStart & day >= startDate) | (day > monthEnd & day <= endDate) ? true : false 
                 let dayGreaterThanToday = (day >= yesterday ) ? true : false 
                 cells.push(
-                    // <Grid itemkey={y-m-d}>
-                    //     <Paper elevation={3} className={classes.day} 
-                    //     style={{backgroundColor : dayIsNotInCurrentMonth ? '#f7f7f7' : 'white'}}>
-                    //         <div className={classes.dayTopFrame} > 
-                    //             <div className={classes.dayDiv} style={{color : isToday & !dayIsNotInCurrentMonth ? '#e64a19': dayIsNotInCurrentMonth ? '#e0e0e0' : 'black' ,
-                    //              fontSize : isToday & !dayIsNotInCurrentMonth ? '20px' : '15px'}}>
-                    //                 <b>{format(day, 'd')}</b>
-                    //             </div>
-                    //             <div className={classes.postTodo} >
-                    //                 {this.state.isHovering ? <PostTodo /> : ''}
-                    //             </div>
-                    //         </div>
-                    //         <div>
-                    //             {
-                    //             todos.map(({todoId , description, createdAt, label}) => {
-                    //                 let createdAtd = getDate(parseISO(createdAt))
-                    //                 let createdAtm = getMonth(parseISO(createdAt))
-                    //                 let createdAty = getYear(parseISO(createdAt))
-                    //                 if(d === createdAtd & m === createdAtm & y === createdAty & label === "general"){
-                    //                     generalCount = generalCount +1
-                    //                 }
-                    //                 if(d === createdAtd & m === createdAtm & y === createdAty & label === "office"){
-                    //                     officeCount = officeCount +1
-                    //                 }
-                    //                 if(d === createdAtd & m === createdAtm & y === createdAty & label === "personal"){
-                    //                     personalCount = personalCount +1
-                    //                 }
-                    //                 return <div></div>
-                    //             }) 
-                    //             }
-                    //             {!dayIsNotInCurrentMonth ? generalCount === 0 ? <div></div> : <div>general : {generalCount} </div> : <div></div>}
-                    //             {!dayIsNotInCurrentMonth ? officeCount === 0 ? <div></div> : <div>office : {officeCount} </div> : <div></div>}
-                    //             {!dayIsNotInCurrentMonth ? personalCount === 0 ? <div></div> : <div>personal : {personalCount} </div> : <div></div>}
-                    //         </div>
-                    //     </Paper>    
-                    // </Grid>
                     <CalendarDayCell d={d} m={m} y={y} mon={mon} weekday={weekday} dayGreaterThanToday ={dayGreaterThanToday} dayIsNotInCurrentMonth={dayIsNotInCurrentMonth} isToday={isToday} day={day} />
                 )
                 day = addDays(day ,1)
@@ -185,11 +141,13 @@ export class CalendarCellFrame extends Component {
     }
 
     render() {
-        const {todos} = this.props.data
-
+ 
         return (
             <div>
-                {this.showDays()}
+                {/* render weekdays */}
+                {this.showDays()} 
+
+                {/* render days in a month */}
                 {this.showCells()}
             </div>
         )

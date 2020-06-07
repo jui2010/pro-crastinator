@@ -2,9 +2,9 @@ html,
 body{
   max-width: 100%;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue','Bebas Neue',
 sans-serif;
-background-color:#eeeeee;
+background-color:rgb(245,245,245);
 }
 
 .container{
@@ -40,7 +40,7 @@ body {
 .separator::before, .separator::after {
   content: '';
   flex: 1;
-  border-bottom: 1px solid #000;
+  border-bottom: 1px solid #bdbdbd;
 }
 .separator::before {
   margin-right: .25em;

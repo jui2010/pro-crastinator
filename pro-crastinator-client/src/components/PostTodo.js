@@ -48,6 +48,7 @@ class PostTodo extends Component {
             label : this.state.label,
             username : this.props.data.userInfo.username,
             dueAt : this.state.dueAt,
+            createdAt : this.props.day !== '' ? this.props.day.toISOString() : new Date().toISOString()
         }
         this.props.postTodo(newTodo)
         this.handleClose()
@@ -61,12 +62,20 @@ class PostTodo extends Component {
                 </MyButton>
                 
                 <Dialog open={this.state.open} onClose={this.handleClose}>
-                    <DialogTitle>Add task</DialogTitle>
-                    <form onSubmit={this.handleSubmit}>
-                        <TextField name="description" id="description" label="Description" type="text" onChange={this.handleChange} fullWidth />
-                        <TextField name="dueAt" id="dueAt" label="Due at" type="date" onChange={this.handleChange} fullWidth />
-                        <TextField name="label" id="label" label="Label" type="text" onChange={this.handleChange} fullWidth />
-                        <Button type="submit" variant="contained" color="primary">
+                    <DialogTitle ><div style={{fontFamily: 'Bebas Neue'}}>Add task</div></DialogTitle>
+                    <form onSubmit={this.handleSubmit} style={{margin : 'auto 15px'}}>
+                        
+                        <TextField name="description" id="description" label="Description" type="text" 
+                            onChange={this.handleChange} variant="outlined" style={{marginBottom: '10px'}} fullWidth />
+                        
+                        <TextField name="dueAt" id="dueAt" type="date" onChange={this.handleChange} helperText="Due Date"
+                            style={{marginBottom: '10px'}} variant="outlined" fullWidth />
+                        
+                        <TextField name="label" id="label" label="Label" type="text" onChange={this.handleChange} helperText="Select an option from personal, office, general, shopping"
+                            style={{marginBottom: '10px'}} variant="outlined" fullWidth />
+                        
+                        <Button type="submit" variant="contained" color="primary" 
+                            style={{fontFamily: 'Bebas Neue', margin : '10px 5px', fontSize : '16px'}}>
                             Post
                         </Button>
                     </form>

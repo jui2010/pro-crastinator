@@ -1,12 +1,14 @@
 import React, { Component, Fragment } from 'react'
-import EditIcon from '@material-ui/icons/Edit'
-import MyButton from './MyButton'
+
 import withStyles from '@material-ui/core/styles/withStyles'
 
+import EditIcon from '@material-ui/icons/Edit'
 import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
 import Dialog from '@material-ui/core/Dialog'
 import DialogTitle from '@material-ui/core/DialogTitle'
+
+// import { Dropdown, DropdownMenu, DropdownItem, Progress } from 'reactstrap';
 
 import {connect} from 'react-redux'
 import {editTodo} from '../redux/actions/dataActions'
@@ -40,7 +42,6 @@ class EditTodo extends Component {
         this.setState({
             [event.target.name] : event.target.value
         })
-        console.log(this.state)
     }
 
     handleSubmit = (event) => {
@@ -60,15 +61,20 @@ class EditTodo extends Component {
                 <EditIcon color="secondary" style={{fontSize : '20px', color : '#757575'}} onClick={this.handleOpen}/>
              
                 <Dialog open={this.state.open} onClose={this.handleClose}>
-                    <DialogTitle>Edit user details</DialogTitle>
-                    <form onSubmit={this.handleSubmit} >
+                    <DialogTitle><div style={{fontFamily: 'Bebas Neue'}}>Edit Todo</div></DialogTitle>
+                    <form onSubmit={this.handleSubmit}  style={{margin : 'auto 15px'}}>
+                        
                         <TextField name="description" id="description" label="Description" type="text" value={this.state.description}
-                            onChange={this.handleChange} hiddenLabel={true} fullWidth/>
-                        <TextField name="label" id="label" label="Label" type="text" value={this.state.label} 
-                            onChange={this.handleChange} hidden='hidden' fullWidth />
-                        <TextField name="dueAt" id="dueAt" label="Due At" type="date" value={this.state.dueAt} 
-                            onChange={this.handleChange} hidden='hidden' fullWidth />
-                        <Button type="submit" variant="contained" color="primary">
+                            onChange={this.handleChange} hiddenLabel={true}  variant="outlined" style={{marginBottom: '10px'}} fullWidth/>
+                        
+                        <TextField name="dueAt" id="dueAt" type="date" value={this.state.dueAt}  helperText="Due Date"
+                            onChange={this.handleChange} hidden='hidden'  variant="outlined" style={{marginBottom: '10px'}} fullWidth />
+                        
+                        <TextField name="label" id="label" label="Label" type="text" value={this.state.label} helperText="Select an option from personal, office, general, shopping"
+                            onChange={this.handleChange} hidden='hidden'  variant="outlined" style={{marginBottom: '10px'}} fullWidth />
+
+                        <Button type="submit" variant="contained" color="primary" 
+                            style={{fontFamily: 'Bebas Neue', margin : '10px 5px', fontSize : '16px'}}>
                             Submit
                         </Button>
                     </form>
